@@ -1,0 +1,3673 @@
+<!--
+================================================================================
+                    GUIA DE ESTRUTURA E PERSONALIZAÇÃO
+================================================================================
+Bem-vindo(a) ao código do convite e site de casamento de Helena & Marcos!
+Todo o código foi organizado em blocos numerados e explicados para facilitar
+a edição de textos, imagens, cores, lista de presentes e configurações.
+
+[SUMÁRIO GERAL DOS BLOCOS]:
+
+[ESTILOS CSS - na tag <style>]:
+   • BLOCO CSS 1: Variáveis Globais & Cores (Paleta, Fontes, Bordas, Sombras)
+   • BLOCO CSS 2: Tipografia & Estilos Base
+   • BLOCO CSS 3: Hero & Envelope 3D Clássico (Abertura, Dobras, Selo e Carta)
+   • BLOCO CSS 4: Linha do Tempo / História do Casal
+   • BLOCO CSS 5: Galeria de Fotos (Pré-Wedding)
+   • BLOCO CSS 6: Dress Code (Trajes e Paleta de Cores dos Convidados)
+   • BLOCO CSS 7: Grade da Lista de Presentes & Botões PIX
+   • BLOCO CSS 8: Formulário de Confirmação de Presença (RSVP)
+   • BLOCO CSS 9: Espaço dos Noivos & Painel / Planilha Administrativa
+   • BLOCO CSS 10: Modais, Pop-out PIX, Lightbox e Notificações (Toast)
+
+[CONTEÚDO HTML - na tag <body>]:
+   • BLOCO HTML 1: Hero & Envelope 3D (Apresentação dos Noivos e Abertura do Convite)
+   • BLOCO HTML 2: Linha do Tempo / Nossa História
+   • BLOCO HTML 3: Galeria de Momentos do Casal
+   • BLOCO HTML 4: Dress Code / Traje Recomendado
+   • BLOCO HTML 5: Lista de Presentes de Casamento & PIX
+   • BLOCO HTML 6: Confirmação de Presença dos Convidados (RSVP)
+   • BLOCO HTML 7: Espaço Exclusivo dos Noivos (Acesso à Planilha & Gestão)
+   • BLOCO HTML 8: Rodapé e Créditos
+   • BLOCO HTML 9: Modais do Sistema (Painel dos Noivos, Inserção Manual, PIN, PIX, Lightbox)
+
+[LÓGICA JAVASCRIPT - na tag <script>]:
+   • BLOCO JS 1: Configurações Principais (Chave PIX, Imagem do Convite, PIN, Storage)
+   • BLOCO JS 2: Lógica de Abertura & Fechamento 3D do Envelope
+   • BLOCO JS 3: Gerenciamento de Modais e Lightboxes
+   • BLOCO JS 4: Catálogo Padrão de Presentes (Itens, Valores e Fotos)
+   • BLOCO JS 5: Renderização da Grade de Presentes & Modal de Presentear com PIX
+   • BLOCO JS 6: Autenticação e Controle de Acesso dos Noivos (PIN de 4 dígitos)
+   • BLOCO JS 7: Painel dos Noivos (Planilha em Tempo Real, Busca, Cadastro e Exportar CSV)
+   • BLOCO JS 8: Galeria de Fotos Pré-Wedding
+   • BLOCO JS 9: Efeito de Scroll da Linha do Tempo (IntersectionObserver)
+   • BLOCO JS 10: Processamento de RSVP & Utilitários (Copiar PIX, Toast Notifications)
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Michelly &amp; Thiago — 14 de Março de 2027</title>
+<meta name="description" content="Convite de casamento de Helena & Marcos. 14 de março de 2027 no Sítio das Oliveiras, Itu — SP. Confirme sua presença e acesse a lista de presentes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ==========================================================================
+     BLOCO CSS 1: VARIÁVEIS DE DESIGN & CORES GERAIS (PALETA DO CASAMENTO)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Centraliza toda a identidade visual do casamento (paleta de cores, tipografia,
+     espaçamentos e sombras).
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • --wine e --wine-dark: Cor principal de destaque (vinho/marsala)
+     • --sage e --sage-dark: Cor secundária botânica (verde sálvia/oliva)
+     • --paper e --paper-card: Tons de fundo (creme/papel artesanal)
+     • --gold: Detalhes dourados e molduras
+     ========================================================================== */
+  :root {
+    --ink: #232E24;
+    --ink-light: #4A5B4C;
+    --paper: #F5EFE1;
+    --paper-2: #ECE2CE;
+    --paper-card: #FCFAF4;
+    --sage: #5C7259;
+    --sage-dark: #3F5240;
+    --sage-light: #E7EEE6;
+    --wine: #8B4F49;
+    --wine-dark: #6E3B37;
+    --wine-light: #F6EBE9;
+    --gold: #A8853E;
+    --gold-light: #F7F1E3;
+    --line: rgba(35, 46, 36, 0.14);
+    --line-subtle: rgba(35, 46, 36, 0.08);
+    --shadow-sm: 0 4px 14px -3px rgba(35, 46, 36, 0.12);
+    --shadow-md: 0 14px 32px -10px rgba(35, 46, 36, 0.22);
+    --shadow-lg: 0 24px 50px -15px rgba(35, 46, 36, 0.35);
+    --radius-sm: 3px;
+    --radius-md: 6px;
+    --radius-lg: 10px;
+    --max: 860px;
+  }
+
+  /* ==========================================================================
+     BLOCO CSS 2: ESTILOS BASE E TIPOGRAFIA
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Configura o reset universal, rolagem suave, fontes base (Work Sans e Fraunces),
+     espaçamento padrão das seções e divisores elegantes (.kicker-line).
+     ========================================================================== */
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, .display {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+  }
+
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+  button, input, textarea { font-family: inherit; }
+
+  ::selection { background: var(--wine); color: #FFF; }
+
+  .section {
+    padding: 88px 24px;
+    max-width: var(--max);
+    margin: 0 auto;
+  }
+  .section-wide {
+    padding: 88px 0;
+    max-width: none;
+  }
+
+  .kicker-line {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    color: var(--sage-dark);
+  }
+  .kicker-line span {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+  }
+  .kicker-line::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ============ DASHBOARD & PLANILHA DOS NOIVOS (MODAL AMPLO) ============ */
+  .modal-box-wide {
+    max-width: 940px;
+    width: 95vw;
+    padding: 28px 26px;
+  }
+  .dash-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 20px;
+  }
+  .dash-title-wrap h3 {
+    font-size: 1.5rem;
+    color: var(--wine-dark);
+    margin-bottom: 2px;
+  }
+  .dash-title-wrap p {
+    font-size: 0.84rem;
+    color: var(--ink-light);
+    margin: 0;
+  }
+  .dash-nav-tabs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--paper);
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid var(--line-subtle);
+    margin-bottom: 22px;
+    overflow-x: auto;
+  }
+  .dash-tab-btn {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    border: none;
+    background: transparent;
+    color: var(--ink-light);
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dash-tab-btn:hover {
+    color: var(--ink);
+  }
+  .dash-tab-btn.active {
+    background: #FFF;
+    color: var(--wine-dark);
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+
+  /* Métricas / Cards de Estatísticas */
+  .dash-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .metric-card {
+    background: #FFF;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  }
+  .metric-card .m-title {
+    font-size: 0.76rem;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .metric-card .m-value {
+    font-family: 'Fraunces', serif;
+    font-size: 1.65rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .metric-card .m-sub {
+    font-size: 0.72rem;
+    color: var(--sage-dark);
+    margin-top: 4px;
+  }
+
+  /* Barra de Ações da Planilha */
+  .sheet-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .sheet-search {
+    display: inline-flex;
+    align-items: center;
+    background: #FFF;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.84rem;
+    flex: 1;
+    min-width: 200px;
+    max-width: 340px;
+  }
+  .sheet-search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 4px;
+    width: 100%;
+    font-size: 0.84rem;
+  }
+  .sheet-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn-sheet {
+    padding: 7px 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border-radius: 5px;
+    border: 1px solid var(--line);
+    background: #FFF;
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
+  .btn-sheet:hover {
+    background: var(--paper);
+    border-color: var(--ink-light);
+  }
+  .btn-sheet.primary {
+    background: var(--wine-dark);
+    color: #FFF;
+    border-color: var(--wine-dark);
+  }
+  .btn-sheet.primary:hover {
+    background: var(--wine);
+  }
+
+  /* Tabela Estilo Planilha */
+  .sheet-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    background: #FFF;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
+    max-height: 440px;
+    overflow-y: auto;
+  }
+  .sheet-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+    text-align: left;
+  }
+  .sheet-table th {
+    background: var(--paper-2);
+    color: var(--ink);
+    font-weight: 600;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line-subtle);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .sheet-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line-subtle);
+    border-right: 1px solid var(--line-subtle);
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  .sheet-table tr:hover td {
+    background: #FAF7F0;
+  }
+  .sheet-table .badge-count {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: var(--sage-light);
+    color: var(--sage-dark);
+    font-weight: 600;
+    font-size: 0.76rem;
+  }
+  .sheet-table .btn-delete-row {
+    padding: 3px 6px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--wine);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.74rem;
+    transition: all 0.15s ease;
+  }
+  .sheet-table .btn-delete-row:hover {
+    background: var(--wine-light);
+    border-color: var(--wine);
+  }
+
+  .sheet-empty {
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--ink-light);
+    font-style: italic;
+  }
+  /* ==========================================================================
+     BLOCO CSS 3: HERO & ENVELOPE 3D CLÁSSICO COM ANIMAÇÃO DE ABERTURA
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Define toda a modelagem tridimensional do envelope clássico, o fundo degradê
+     radial suave, rotação da aba triangular, selo de cera botânico e a animação
+     de revelação da carta/convite.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • .hero: Altura mínima, alinhamento e degradê de fundo
+     • .envelope-wrap: Largura e perspectiva 3D do envelope
+     • .letter: Dimensões e acabamento da carta interna
+     • .min-flap e .min-wax-seal: Cores e sombras da aba e do selo
+     ========================================================================== */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px 40px;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 12%, #FCFAF6 0%, #F5EFE4 55%, var(--paper) 100%);
+  }
+  .hero-eyebrow {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--wine-dark);
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+  .hero-names {
+    font-size: clamp(2.6rem, 8vw, 4.4rem);
+    line-height: 1.02;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .hero-names .amp {
+    font-style: italic;
+    color: var(--wine);
+    padding: 0 6px;
+    font-weight: 300;
+  }
+  .hero-date {
+    color: var(--sage-dark);
+    font-size: 0.96rem;
+    margin-bottom: 28px;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+
+  /* ==========================================================================
+     HERO & ESTRUTURA DO ENVELOPE CLÁSSICO NORMAL (3D INTERATIVO)
+     ========================================================================== */
+  
+  /* Container da perspectiva 3D do envelope clássico */
+  .envelope-wrap {
+    perspective: 1400px;
+    width: min(230px, 72vw);
+    margin: 0 auto 18px;
+    position: relative;
+  }
+
+  /* Corpo principal do envelope com renderização tridimensional */
+  .envelope {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1.38;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .envelope:focus-visible {
+    outline: 2px solid var(--sage-dark);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+  }
+  .envelope:not(.opened):hover {
+    transform: translateY(-4px) rotateX(2deg);
+  }
+
+  /* Sombra inferior suave e realista projetada sob o envelope */
+  .env-shadow {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    bottom: -16px;
+    height: 24px;
+    background: radial-gradient(ellipse, rgba(35,46,36,0.28), transparent 70%);
+    filter: blur(5px);
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+  }
+  .envelope.opened .env-shadow {
+    transform: scale(1.12) translateY(6px);
+    opacity: 0.55;
+  }
+
+  /* Chassis de fundo do envelope (papel artesanal texturizado) */
+  .env-back {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(155deg, #FAF7F0 0%, #EFE7DA 100%);
+    border: 1px solid rgba(168, 133, 62, 0.25);
+    border-radius: 6px;
+    box-shadow: 
+      0 10px 26px -6px rgba(35,46,36,0.15),
+      inset 0 0 0 1px rgba(255,255,255,0.8),
+      inset 0 0 0 2px rgba(235, 222, 203, 0.4);
+    overflow: visible;
+  }
+
+  /* Moldura interna delicada em fio de ouro */
+  .env-gold-frame {
+    position: absolute;
+    inset: 6px;
+    border: 1px solid rgba(168, 133, 62, 0.18);
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ==========================================================================
+     CARTA / CONVITE INTERNO (100% OCULTO QUANDO FECHADO, REVELADO AO ABRIR)
+     ========================================================================== */
+  .letter {
+    position: absolute;
+    left: 4.5%;
+    right: 4.5%;
+    top: 4%;
+    height: 92%;
+    background: #FFFDF9;
+    border: 1px solid rgba(168, 133, 62, 0.28);
+    border-radius: 4px;
+    box-shadow: 0 3px 10px rgba(35,46,36,0.1);
+    transform: translateY(6%) scale(0.95);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.5s ease,
+                visibility 0.5s ease,
+                box-shadow 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 3;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  /* Estado aberto da carta: sobe suavemente e ganha destaque em z-index */
+  .envelope.opened .letter {
+    transform: translateY(-58%) scale(1.05);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 25;
+    box-shadow: 
+      0 20px 42px -10px rgba(35,46,36,0.32),
+      0 8px 18px -4px rgba(110, 59, 55, 0.15),
+      inset 0 0 0 1px rgba(255,255,255,0.9),
+      inset 0 0 0 2px #FAF6EE,
+      inset 0 0 0 3px rgba(168, 133, 62, 0.3);
+    cursor: pointer;
+    transition: transform 1s cubic-bezier(0.2, 1, 0.3, 1) 0.35s,
+                opacity 0.6s ease 0.3s,
+                visibility 0s linear 0.3s,
+                box-shadow 1s cubic-bezier(0.2, 1, 0.3, 1) 0.35s;
+  }
+
+  /* Estado intermediário durante animação de fechamento */
+  .envelope.closing .letter {
+    transform: translateY(6%) scale(0.95);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 5;
+    transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.45s ease 0.2s,
+                visibility 0s linear 0.75s,
+                box-shadow 0.75s ease;
+  }
+
+  .letter-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #FFFDF9;
+    overflow: hidden;
+  }
+
+  /* Layout de fallback tipográfico (usado caso não haja imagem configurada) */
+  .letter-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px 12px;
+    background: linear-gradient(180deg, #FFFEFA 0%, #FAF5EA 100%);
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 0.7s ease 0.4s, transform 0.7s ease 0.4s;
+  }
+  .envelope.opened .letter-fallback {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .letter .p-mono {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.72rem;
+    color: var(--sage-dark);
+    margin-bottom: 4px;
+    letter-spacing: 0.04em;
+  }
+  .letter .p-names {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.15rem, 4vw, 1.45rem);
+    margin-bottom: 4px;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .letter .p-date {
+    font-size: 0.72rem;
+    color: var(--wine-dark);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+  .letter .p-venue {
+    font-size: 0.68rem;
+    color: var(--sage-dark);
+    margin-bottom: 8px;
+  }
+  .letter .p-quote {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.68rem;
+    color: var(--ink-light);
+    max-width: 20ch;
+    line-height: 1.35;
+    border-top: 1px solid rgba(168, 133, 62, 0.2);
+    padding-top: 6px;
+  }
+  .letter .p-hint {
+    margin-top: 8px;
+    font-size: 0.64rem;
+    color: var(--wine-dark);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.7s;
+  }
+  .envelope.opened .letter .p-hint { opacity: 0.95; }
+
+  /* Imagem oficial do convite vertical (exibida nitidamente após abertura) */
+  .letter-inner img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.03);
+    filter: blur(2px);
+    transition: opacity 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s,
+                transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s,
+                filter 0.7s ease 0.35s;
+    pointer-events: none;
+  }
+  .envelope.opened .letter-inner img {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    filter: blur(0);
+    pointer-events: auto;
+  }
+
+  /* Selo flutuante de instrução para ampliar o convite */
+  .letter-zoom-badge {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    right: 6px;
+    background: rgba(35, 46, 36, 0.88);
+    color: #FFF;
+    font-size: 0.65rem;
+    padding: 4px 6px;
+    border-radius: 4px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: all 0.4s ease 0.8s;
+    pointer-events: none;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  }
+  .envelope.opened .letter-zoom-badge {
+    opacity: 0.96;
+    transform: translateY(0);
+  }
+
+  /* ==========================================================================
+     DOBRAS TRIANGULARES DO ENVELOPE CLÁSSICO (100% OPACO FECHADO)
+     ========================================================================== */
+  
+  /* Dobra Lateral Esquerda */
+  .env-fold-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(0 0, 52% 50%, 0 100%);
+    background: linear-gradient(105deg, #FBF8F2 0%, #EBE0CF 100%);
+    z-index: 10;
+    pointer-events: none;
+    border-radius: 6px 0 0 6px;
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.8);
+  }
+  .env-fold-left::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    clip-path: polygon(0 0, 52% 50%, 0 100%);
+    border: 1px solid rgba(168, 133, 62, 0.16);
+    pointer-events: none;
+  }
+
+  /* Dobra Lateral Direita */
+  .env-fold-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(100% 0, 48% 50%, 100% 100%);
+    background: linear-gradient(255deg, #FBF8F2 0%, #EBE0CF 100%);
+    z-index: 10;
+    pointer-events: none;
+    border-radius: 0 6px 6px 0;
+    box-shadow: inset -1px 0 0 rgba(255,255,255,0.8);
+  }
+  .env-fold-right::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    clip-path: polygon(100% 0, 48% 50%, 100% 100%);
+    border: 1px solid rgba(168, 133, 62, 0.16);
+    pointer-events: none;
+  }
+
+  /* Dobra Inferior (Bolso Frontal Triângulo) */
+  .env-fold-bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+    background: linear-gradient(0deg, #FAF6EE 0%, #E5DAC6 100%);
+    z-index: 12;
+    pointer-events: none;
+    border-radius: 0 0 6px 6px;
+    filter: drop-shadow(0 -3px 6px rgba(35, 46, 36, 0.08));
+  }
+  .env-fold-bottom::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+    border: 1px solid rgba(168, 133, 62, 0.2);
+    pointer-events: none;
+  }
+
+  /* ==========================================================================
+     ABA SUPERIOR TRIANGULAR EM 3D (FECHADA POR CIMA DE TODAS AS DOBRAS)
+     ========================================================================== */
+  .min-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 0, 50% 53%);
+    background: linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 35%, #E2D3BE 100%);
+    border-top: 1px solid rgba(255,255,255,0.95);
+    transform-origin: top center;
+    transform: rotateX(0deg);
+    transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s ease;
+    z-index: 14;
+    /* Sombra triangular marcante e profunda projetada pela aba sobre as dobras do envelope */
+    filter: drop-shadow(0 8px 14px rgba(25, 35, 26, 0.42)) drop-shadow(0 3px 6px rgba(25, 35, 26, 0.28)) drop-shadow(0 1px 2px rgba(25, 35, 26, 0.35));
+    border-radius: 6px 6px 0 0;
+  }
+  .min-flap::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    clip-path: polygon(0 0, 100% 0, 50% 53%);
+    border: 1px solid rgba(168, 133, 62, 0.28);
+    pointer-events: none;
+  }
+
+  /* Abertura da aba superior em 3D para trás */
+  .envelope.opened .min-flap {
+    transform: rotateX(-176deg);
+    z-index: 1;
+    pointer-events: none;
+    filter: none;
+  }
+
+  /* Estado durante fechamento da aba superior */
+  .envelope.closing-flap .min-flap {
+    transform: rotateX(0deg);
+    z-index: 14;
+    filter: drop-shadow(0 8px 14px rgba(25, 35, 26, 0.42)) drop-shadow(0 3px 6px rgba(25, 35, 26, 0.28)) drop-shadow(0 1px 2px rgba(25, 35, 26, 0.35));
+    transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s ease 0.3s;
+  }
+
+  /* ==========================================================================
+     SELO DE CERA BOTÂNICO (POSICIONADO NO CENTRO DA JUNÇÃO DAS 4 DOBRAS)
+     ========================================================================== */
+  .min-wax-seal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 38px;
+    height: 38px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 35% 30%, #9C5248, #743732 65%, #562723 100%);
+    border-radius: 50%;
+    z-index: 16;
+    box-shadow: 
+      0 6px 16px rgba(25, 35, 26, 0.42),
+      0 2px 5px rgba(25, 35, 26, 0.3),
+      inset 0 1.5px 2px rgba(255,255,255,0.45),
+      inset 0 -1.5px 2px rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 235, 195, 0.35);
+    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .min-wax-seal .seal-inner-ring {
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(255, 235, 195, 0.45);
+    border-radius: 50%;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
+  }
+
+  /* Desaparecimento suave do selo ao abrir o envelope */
+  .envelope.opened .min-wax-seal {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2) rotate(30deg);
+    pointer-events: none;
+  }
+
+  /* Selo selando novamente com impacto tátil suave */
+  .envelope.sealing .min-wax-seal {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    transition: opacity 0.4s ease, transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  /* Partículas Mágicas Flutuantes */
+  .hearts {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+  }
+  .heart {
+    position: absolute;
+    font-size: 1rem;
+    color: var(--wine);
+    opacity: 0;
+  }
+  .heart.a1 { left: 22%; top: 38%; font-size: 1.1rem; }
+  .heart.a2 { left: 49%; top: 18%; font-size: 1.35rem; color: var(--gold); }
+  .heart.a3 { left: 76%; top: 40%; font-size: 1.1rem; }
+  .heart.a4 { left: 34%; top: 26%; font-size: 0.95rem; color: var(--sage); }
+  .heart.a5 { left: 65%; top: 28%; font-size: 0.95rem; color: var(--gold); }
+  .envelope.opened .heart { animation: heartFloat 1.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+  .envelope.opened .heart.a2 { animation-delay: 0.15s; }
+  .envelope.opened .heart.a3 { animation-delay: 0.28s; }
+  .envelope.opened .heart.a4 { animation-delay: 0.2s; }
+  .envelope.opened .heart.a5 { animation-delay: 0.35s; }
+  @keyframes heartFloat {
+    0% { opacity: 0; transform: translateY(0) scale(0.5); }
+    35% { opacity: 0.95; }
+    100% { opacity: 0; transform: translateY(-80px) scale(1.2); }
+  }
+
+  .hero-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .hero-tap {
+    font-size: 0.92rem;
+    color: var(--wine-dark);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    transition: opacity 0.4s ease;
+  }
+  .envelope.opened ~ .hero-controls .hero-tap { opacity: 0; }
+
+  .btn-envelope-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    background: var(--wine-dark);
+    color: #FFF;
+    border: none;
+    border-radius: 30px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(110, 59, 55, 0.25);
+    transition: all 0.25s ease;
+  }
+  .btn-envelope-action:hover {
+    background: var(--wine);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(110, 59, 55, 0.32);
+  }
+  .btn-envelope-action.secondary {
+    background: rgba(255,255,255,0.85);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    box-shadow: none;
+  }
+  .btn-envelope-action.secondary:hover {
+    background: #FFF;
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 38px;
+    background: linear-gradient(var(--sage), transparent);
+    opacity: 0.5;
+  }
+
+  /* ============ BUTTONS & FORMS ============ */
+  .btn {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-solid {
+    background: var(--wine-dark);
+    border-color: var(--wine-dark);
+    color: #FFF;
+  }
+  .btn-solid:hover {
+    background: var(--wine);
+    border-color: var(--wine);
+    color: #FFF;
+  }
+  .btn-sage {
+    background: var(--sage-dark);
+    border-color: var(--sage-dark);
+    color: #FFF;
+  }
+  .btn-sage:hover {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+  .btn-ghost {
+    border-color: var(--line);
+    font-size: 0.8rem;
+    padding: 7px 14px;
+  }
+  .btn-ghost:hover {
+    background: var(--paper-2);
+    color: var(--ink);
+  }
+
+  input[type=text], input[type=number], input[type=password], input[type=url], textarea, select {
+    font-family: inherit;
+    font-size: 0.92rem;
+    padding: 11px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--paper-card);
+    color: var(--ink);
+    width: 100%;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--wine);
+    box-shadow: 0 0 0 3px rgba(139, 79, 73, 0.15);
+  }
+
+  /* ==========================================================================
+     BLOCO CSS 4: LINHA DO TEMPO & CRONOGRAMA HISTÓRICO (NOSSA HISTÓRIA)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Estiliza o traço vertical pontilhado, pontos de destaque dourados (.t-dot),
+     anos e cards com a narrativa do relacionamento.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • .t-year: Tipografia e cor dos anos
+     • .t-dot: Cor e tamanho dos círculos da linha do tempo
+     ========================================================================== */
+  .story { background: var(--paper); }
+  .timeline {
+    position: relative;
+    margin-top: 28px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+  }
+  @media(min-width: 640px) {
+    .timeline::before { left: 50%; }
+  }
+  .t-item {
+    position: relative;
+    padding: 0 0 56px 52px;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .t-item.visible { opacity: 1; transform: translateY(0); }
+  .t-item:last-child { padding-bottom: 0; }
+  .t-dot {
+    position: absolute;
+    left: 20px;
+    top: 4px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--wine);
+    transform: translateX(-50%) scale(0.4);
+    transition: transform 0.5s ease 0.1s;
+  }
+  .t-item.visible .t-dot { transform: translateX(-50%) scale(1); }
+  .t-year {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--wine-dark);
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+  .t-title { font-size: 1.25rem; margin-bottom: 6px; }
+  .t-text { font-size: 0.94rem; opacity: 0.85; max-width: 46ch; }
+
+  @media(min-width: 640px) {
+    .t-item { width: 50%; padding: 0 0 64px 0; }
+    .t-item:nth-child(odd) { padding-right: 52px; text-align: right; margin-left: 0; }
+    .t-item:nth-child(even) { padding-left: 52px; margin-left: 50%; }
+    .t-item:nth-child(odd) .t-dot { left: auto; right: -6px; transform: translateX(50%) scale(0.4); }
+    .t-item:nth-child(odd).visible .t-dot { transform: translateX(50%) scale(1); }
+    .t-item:nth-child(even) .t-dot { left: -6px; }
+    .t-item:nth-child(odd) .t-text { margin-left: auto; }
+  }
+
+  /* ==========================================================================
+     BLOCO CSS 5: GALERIA HORIZONTAL DE FOTOS (PRÉ-WEDDING)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Cria o carrossel horizontal contínuo com fotos do ensaio pré-wedding,
+     efeitos ao passar o mouse e etiquetas sobre as imagens.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • .g-photo: Proporção e largura dos cartões de foto
+     • .g-photo-tag: Estilo da etiqueta sobre as fotos
+     ========================================================================== */
+  .gallery-section {
+    background: var(--paper-card);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .gallery-head { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  .gallery-strip {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 36px 24px 16px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .gallery-strip::-webkit-scrollbar { height: 6px; }
+  .gallery-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+  .g-photo {
+    flex: 0 0 auto;
+    width: min(270px, 74vw);
+    scroll-snap-align: center;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    text-align: left;
+  }
+  .g-photo-img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 12px 26px -14px rgba(35,46,36,0.4);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 16px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .g-photo-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(20,26,20,0.7) 100%);
+  }
+  .g-photo:hover .g-photo-img {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 34px -12px rgba(35,46,36,0.5);
+  }
+  .g-photo-tag {
+    position: relative;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: #FFF;
+    font-size: 0.9rem;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+  .g-caption {
+    margin-top: 10px;
+    font-size: 0.84rem;
+    color: var(--ink);
+    opacity: 0.8;
+  }
+  .gallery-hint {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--sage-dark);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    padding-bottom: 12px;
+  }
+
+  /* ==========================================================================
+     BLOCO CSS 6: DRESS CODE & PALETA DE CORES DOS CONVIDADOS
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Formata os cartões de recomendação de trajes para convidadas e convidados,
+     amostras circulares de paleta de cores (.swatch) e alertas de cores reservadas.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • .d-card: Cores de fundo e bordas dos cartões
+     • .swatch: Tamanho e espaçamento das bolinhas de cor
+     ========================================================================== */
+  .dress-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+    margin-top: 24px;
+  }
+  @media(min-width: 620px) {
+    .dress-cards { grid-template-columns: 1fr 1fr; }
+  }
+  .d-card {
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 32px 28px;
+    box-shadow: var(--shadow-sm);
+  }
+  .d-card h3 { font-size: 1.4rem; margin-bottom: 6px; }
+  .d-card .d-sub {
+    font-size: 0.85rem;
+    color: var(--sage-dark);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    margin-bottom: 16px;
+  }
+  .d-card p { font-size: 0.92rem; margin: 0 0 18px; opacity: 0.88; }
+  .swatches { display: flex; gap: 10px; margin-bottom: 6px; }
+  .swatch { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(35,46,36,0.15); }
+  .swatch-note { font-size: 0.76rem; opacity: 0.65; }
+  .d-avoid { font-size: 0.82rem; color: var(--wine-dark); margin-top: 14px; }
+
+  /* ==========================================================================
+     BLOCO CSS 7: GRADE DA LISTA DE PRESENTES & BOTÕES PIX
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Estiliza os cartões de produtos da lista de presentes (imagem com zoom,
+     etiqueta de categoria, valor em destaque e botão de presentear via PIX).
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • .gifts-grid: Quantidade de colunas responsivas da lista
+     • .btn-presentear: Cores e animação do botão de presentear
+     • .gift-reserved-badge: Badge de item já escolhido
+     ========================================================================== */
+  .gifts-section {
+    background: var(--paper-2);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .gifts-header-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .gifts-header-title h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 6px; }
+  .gifts-header-title p { font-size: 0.92rem; opacity: 0.8; max-width: 52ch; }
+
+  /* ==========================================================================
+     BLOCO CSS 9: ESPAÇO DOS NOIVOS & PAINEL / PLANILHA ADMINISTRATIVA
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Estiliza o banner de acesso dos noivos, abas de navegação interna do dashboard,
+     cards de métricas (total de convidados), barra de pesquisa e a tabela-planilha.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • .metric-card: Formato dos cartões de números estatísticos
+     • .sheet-table: Cores de cabeçalho e linhas da tabela estilo Excel
+     ========================================================================== */
+  .couple-area-section {
+    background: radial-gradient(ellipse at 50% 10%, #FCFAF6 0%, #F5EDE0 60%, var(--paper) 100%);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .couple-admin-card {
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 32px 28px;
+    box-shadow: var(--shadow-sm);
+    margin-top: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .couple-admin-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--wine), var(--gold), var(--sage));
+  }
+  .couple-admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line-subtle);
+    margin-bottom: 20px;
+  }
+  .couple-admin-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .admin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--wine-light);
+    color: var(--wine-dark);
+    border: 1px solid rgba(107, 31, 43, 0.15);
+  }
+  .admin-badge.active {
+    background: var(--sage-light);
+    color: var(--sage-dark);
+    border-color: rgba(92, 114, 89, 0.25);
+  }
+  .couple-admin-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .couple-features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .couple-feature-item {
+    background: #FFF;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .couple-feature-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--gold);
+  }
+  .couple-feature-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+  .couple-feature-item h4 {
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .couple-feature-item p {
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  /* Admin Creation Form */
+  .admin-create-card {
+    background: var(--paper-card);
+    border: 2px dashed var(--wine);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-sm);
+  }
+  .admin-create-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+    color: var(--wine-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .gift-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .form-field-full {
+    grid-column: 1 / -1;
+  }
+
+  /* GIFTS GRID (Cards with Image, Name, Price, Presentear Button) */
+  .gifts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  .gift-card {
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative;
+  }
+  .gift-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(35, 46, 36, 0.28);
+  }
+  .gift-card.is-reserved {
+    opacity: 0.85;
+    background: #FAF7F0;
+  }
+
+  .gift-card-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 11;
+    overflow: hidden;
+    background: #E8DEC7;
+  }
+  .gift-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .gift-card:hover .gift-card-img {
+    transform: scale(1.04);
+  }
+
+  .gift-category-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(35, 46, 36, 0.75);
+    backdrop-filter: blur(4px);
+    color: #FFF;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.02em;
+  }
+
+  .gift-reserved-badge {
+    position: absolute;
+    inset: 0;
+    background: rgba(44, 53, 41, 0.78);
+    backdrop-filter: blur(2px);
+    color: #FFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px;
+  }
+  .gift-reserved-badge span:first-child {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+  }
+  .gift-reserved-badge .reserved-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: #F8ECE2;
+  }
+  .gift-reserved-badge .reserved-guest {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    margin-top: 2px;
+  }
+
+  .gift-card-content {
+    padding: 20px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .gift-card-title {
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  .gift-card-desc {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    margin-bottom: 16px;
+    flex: 1;
+    line-height: 1.45;
+  }
+  .gift-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-subtle);
+  }
+  .gift-price {
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--wine-dark);
+  }
+  .gift-price-cents {
+    font-size: 0.85rem;
+    font-weight: 400;
+  }
+
+  .btn-presentear {
+    padding: 9px 18px;
+    background: var(--wine-dark);
+    color: #FFF;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.86rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 8px rgba(110, 59, 55, 0.2);
+  }
+  .btn-presentear:hover {
+    background: var(--wine);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(110, 59, 55, 0.28);
+  }
+
+  .gift-admin-tools {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+  }
+
+  /* LISTA DE PRESENTES MINIMIZADA / RECOLHÍVEL */
+  .gifts-header-action {
+    display: flex;
+    align-items: center;
+  }
+  .btn-toggle-gifts {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    font-size: 0.94rem;
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+  .btn-toggle-gifts:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  .gifts-count-badge {
+    background: rgba(255, 255, 255, 0.22);
+    font-size: 0.76rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+  }
+  .gifts-collapsible-wrapper {
+    transition: all 0.4s ease;
+    margin-top: 24px;
+  }
+  .gifts-collapsible-wrapper.is-collapsed {
+    display: none;
+  }
+  .gifts-collapsible-wrapper.is-open {
+    display: block;
+    animation: fadeInGifts 0.35s ease forwards;
+  }
+  @keyframes fadeInGifts {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ==========================================================================
+     BLOCO CSS 8: FORMULÁRIO DE CONFIRMAÇÃO DE PRESENÇA (RSVP)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Estiliza o formulário de presença, campos de texto, contagem de convidados,
+     botão principal e mensagem de confirmação instantânea.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • .rsvp-form input, textarea: Estilo das caixas de digitação
+     • .rsvp-confirm: Caixa de mensagem de agradecimento ao confirmar
+     ========================================================================== */
+  .rsvp-section { background: var(--paper); }
+  .rsvp-form {
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 36px 30px;
+    margin-top: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  @media(max-width: 540px) { .field-row { grid-template-columns: 1fr; } }
+  label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--sage-dark);
+  }
+  .field { margin-bottom: 16px; }
+  .rsvp-submit { width: 100%; padding: 13px; font-size: 0.94rem; margin-top: 6px; }
+  .rsvp-confirm {
+    margin-top: 20px;
+    padding: 16px 18px;
+    background: rgba(92,114,89,0.12);
+    border: 1px solid var(--sage);
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    display: none;
+    color: var(--sage-dark);
+  }
+  .rsvp-confirm.show { display: block; }
+  .rsvp-list { margin-top: 26px; font-size: 0.84rem; opacity: 0.8; }
+  .rsvp-list ul { margin: 8px 0 0; padding-left: 18px; }
+
+  footer {
+    text-align: center;
+    padding: 60px 24px 70px;
+    background: var(--paper-warm);
+    border-top: 1px solid var(--line);
+    color: var(--sage-dark);
+  }
+  .footer-love-msg {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--wine-dark);
+    margin-bottom: 16px;
+  }
+  .footer-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin: 14px auto 16px;
+    opacity: 0.7;
+  }
+  .creator-credits {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.84rem;
+    color: var(--ink-light);
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.75);
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--line-subtle);
+    box-shadow: 0 1px 4px rgba(35, 46, 36, 0.04);
+  }
+  .creator-credits strong {
+    color: var(--wine-dark);
+    font-weight: 600;
+  }
+
+  /* ==========================================================================
+     BLOCO CSS 10: MODAIS, POP-OUT PIX, LIGHTBOXES E NOTIFICAÇÕES (TOAST)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Controla o fundo escurecido com desfoque (.modal-backdrop), caixas de diálogo
+     centralizadas, pop-out de doação PIX, visualizador de imagens e aviso Toast.
+     ========================================================================== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 26, 20, 0.78);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .modal-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-box {
+    background: var(--paper-card);
+    width: 100%;
+    max-width: 520px;
+    border-radius: var(--radius-md);
+    padding: 36px 30px;
+    position: relative;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--line);
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-backdrop.show .modal-box {
+    transform: scale(1);
+  }
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--paper-card);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: var(--ink);
+    transition: all 0.2s ease;
+  }
+  .modal-close:hover {
+    background: var(--ink);
+    color: #FFF;
+  }
+
+  /* Passcode Pin Inputs */
+  .passcode-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 24px 0;
+  }
+  .passcode-digit {
+    width: 52px;
+    height: 60px;
+    font-size: 1.8rem;
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    border: 2px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+  }
+  .passcode-digit:focus {
+    border-color: var(--wine);
+    background: #FFF;
+  }
+
+  .modal-pix-box {
+    max-width: 520px;
+    padding: 30px 26px;
+    background: #FFF;
+    border-radius: 8px;
+  }
+  .pix-gift-preview {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin: 16px 0;
+    text-align: left;
+  }
+  .pix-gift-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: var(--paper-warm);
+    flex-shrink: 0;
+  }
+  .pix-gift-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .pix-gift-info .p-cat {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sage-dark);
+    font-weight: 600;
+  }
+  .pix-gift-info .p-name {
+    font-size: 0.96rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 2px 0 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pix-gift-info .p-price {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--wine-dark);
+  }
+
+  .pix-box {
+    background: #FAF6EF;
+    border: 1px solid rgba(168, 133, 62, 0.35);
+    border-radius: 6px;
+    padding: 18px 16px;
+    margin: 16px 0;
+    text-align: center;
+  }
+  .pix-key-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #FFF;
+    padding: 9px 12px;
+    border-radius: 4px;
+    border: 1px solid rgba(168, 133, 62, 0.4);
+    margin-top: 10px;
+  }
+  .pix-key-text {
+    font-family: monospace;
+    font-size: 0.86rem;
+    color: var(--ink);
+    word-break: break-all;
+    font-weight: 600;
+  }
+  .pix-instructions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+    margin: 12px 0 6px;
+    font-size: 0.78rem;
+    color: var(--ink-light);
+    background: rgba(255,255,255,0.6);
+    padding: 10px 12px;
+    border-radius: 4px;
+  }
+  .pix-instructions span {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .pix-instructions .step-num {
+    font-weight: 700;
+    color: var(--wine);
+    min-width: 14px;
+  }
+
+  /* Toast Notification */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--ink);
+    color: #FFF;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.88rem;
+    z-index: 2000;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+    html { scroll-behavior: auto; }
+  }
+</style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+
+<!-- ==========================================================================
+     BLOCO HTML 1: HERO & ENVELOPE 3D CLÁSSICO (ABERTURA DO CONVITE)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Apresenta os nomes dos noivos, data, local e o envelope tridimensional que se
+     abre ao toque revelando o convite com animação refinada.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • Nomes dos noivos no <h1> (ex: Helena & Marcos)
+     • Data e local no <p class="hero-date">
+     • Textos tipográficos de fallback da carta no <div class="letter-fallback">
+     ========================================================================== -->
+<section class="hero">
+  <p class="hero-eyebrow">temos a alegria de convidar você para o nosso casamento</p>
+  <h1 class="hero-names">Michelly<span class="amp">&amp;</span>Thiago</h1>
+  <p class="hero-date">14 de março de 2027 · Sítio das Oliveiras, Itu — SP</p>
+
+  <!-- ========================================================================
+       ENVELOPE NORMAL CLÁSSICO 3D (COM CONVITE, FOTO, DOBRAS E SELO REFINADO)
+       ======================================================================== -->
+  <div class="envelope-wrap">
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Abrir envelope do convite de casamento">
+      <!-- Sombra inferior realista -->
+      <div class="env-shadow"></div>
+      
+      <!-- Chassis e estrutura interna do envelope -->
+      <div class="env-back">
+        <!-- Moldura em fio dourado artesanal -->
+        <div class="env-gold-frame"></div>
+
+        <!-- CARTA / CONVITE INTERNO COM A IMAGEM -->
+        <div class="letter" id="letter">
+          <div class="letter-inner" id="letterInner">
+            <!-- Fallback tipográfico caso não haja imagem inserida no código -->
+            <div class="letter-fallback" id="letterFallback">
+              <p class="p-mono">o convite de casamento</p>
+              <h2 class="p-names">Michelly &amp; Thiago</h2>
+              <p class="p-date">14 · 03 · 2027 — às 17h</p>
+              <p class="p-venue">Sítio das Oliveiras · Itu, SP</p>
+              <p class="p-quote">"O amor é a poesia dos sentidos."</p>
+              <p class="p-hint">toque para ver o convite completo</p>
+            </div>
+            <!-- Imagem oficial do convite vertical de Helena & Marcos -->
+            <img id="inviteImg" alt="Convite de casamento vertical oficial de Helena &amp; Marcos">
+            <div class="letter-zoom-badge">Toque para ampliar</div>
+          </div>
+        </div>
+
+        <!-- DOBRAS DO ENVELOPE CLÁSSICO FECHADO (100% OPACO) -->
+        <div class="env-fold-left" title="Dobra lateral esquerda"></div>
+        <div class="env-fold-right" title="Dobra lateral direita"></div>
+        <div class="env-fold-bottom" title="Dobra inferior"></div>
+
+        <!-- ABA SUPERIOR TRIANGULAR EM 3D (GIRA AO ABRIR) -->
+        <div class="min-flap" title="Aba superior clássica"></div>
+
+        <!-- SELO DE CERA CLÁSSICO -->
+        <div class="min-wax-seal" title="Selo de cera do envelope">
+          <div class="seal-inner-ring"></div>
+        </div>
+
+        <!-- PARTÍCULAS REFINADAS FLUTUANTES -->
+        <div class="hearts">
+          <span class="heart a1"><i class="fa-solid fa-star" style="font-size: 8px;"></i></span>
+          <span class="heart a2"><i class="fa-regular fa-star" style="font-size: 8px;"></i></span>
+          <span class="heart a3">·</span>
+          <span class="heart a4"><i class="fa-solid fa-star" style="font-size: 8px;"></i></span>
+          <span class="heart a5"><i class="fa-regular fa-star" style="font-size: 8px;"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controles interativos pós-abertura do envelope -->
+  <div class="hero-controls">
+    <p class="hero-tap" id="heroTap">toque no envelope para abrir</p>
+    <div id="heroActionBtns" style="display: none; gap: 8px;">
+      <button class="btn-envelope-action" id="btnExpandInvite"><i class="fa-solid fa-expand" style="margin-right: 6px;"></i>Ver convite em tela cheia</button>
+      <button class="btn-envelope-action secondary" id="btnCloseEnvelope"><i class="fa-solid fa-envelope" style="margin-right: 6px;"></i>Fechar envelope</button>
+    </div>
+  </div>
+
+  <div class="scroll-cue"></div>
+</section>
+
+<!-- ==========================================================================
+     BLOCO HTML 2: LINHA DO TEMPO / NOSSA HISTÓRIA
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Apresenta os momentos mais marcantes da história do casal em ordem cronológica.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • Anos no <p class="t-year"> (ex: 2018, 2019, 2021...)
+     • Títulos no <h3 class="t-title"> e textos descritivos no <p class="t-text">
+     ========================================================================== -->
+<section class="section story" id="historia">
+  <div class="kicker-line"><span>nossa história</span></div>
+  <h2 style="font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 8px;">Do encontro ao "sim"</h2>
+  <p style="opacity: 0.78; max-width: 52ch; margin-bottom: 14px;">Um resumo breve do caminho que nos trouxe até aqui — e até vocês.</p>
+
+  <div class="timeline" id="timeline">
+    <div class="t-item">
+      <span class="t-dot"></span>
+      <p class="t-year">2018</p>
+      <h3 class="t-title">Um encontro por acaso</h3>
+      <p class="t-text">Nos conhecemos na festa de um amigo em comum. Quase nenhum dos dois foi — ainda bem que fomos!</p>
+    </div>
+    <div class="t-item">
+      <span class="t-dot"></span>
+      <p class="t-year">2019</p>
+      <h3 class="t-title">O primeiro café</h3>
+      <p class="t-text">Marcamos "só um cafezinho rápido" e ficamos conversando por quatro horas ininterruptas.</p>
+    </div>
+    <div class="t-item">
+      <span class="t-dot"></span>
+      <p class="t-year">2021</p>
+      <h3 class="t-title">A vida a dois</h3>
+      <p class="t-text">Alugamos nosso primeiro apartamento e aprendemos a dividir cada detalhe — inclusive o controle remoto.</p>
+    </div>
+    <div class="t-item">
+      <span class="t-dot"></span>
+      <p class="t-year">2025</p>
+      <h3 class="t-title">O pedido inesquecível</h3>
+      <p class="t-text">Em uma viagem à serra para ver o pôr do sol, veio o pedido de casamento e o "SIM" mais feliz de todos.</p>
+    </div>
+    <div class="t-item">
+      <span class="t-dot"></span>
+      <p class="t-year">2027</p>
+      <h3 class="t-title">O grande dia</h3>
+      <p class="t-text">E agora, com todo amor, queremos celebrar este momento inesquecível ao lado de quem sempre nos apoiou.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     BLOCO HTML 3: GALERIA DE FOTOS (PRÉ-WEDDING)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Estrutura a seção da galeria de fotos do casal (alimentada dinamicamente via JS).
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • Título e subtítulo da galeria
+     • Para adicionar ou trocar as fotos, edite o array `photos` no BLOCO JS 8.
+     ========================================================================== -->
+<section class="gallery-section section-wide" id="galeria">
+  <div class="gallery-head">
+    <div class="kicker-line"><span>pré-wedding</span></div>
+    <h2 style="font-size: clamp(1.6rem, 4vw, 2.2rem);">Momentos antes do grande dia</h2>
+  </div>
+  <div class="gallery-strip" id="galleryStrip">
+    <!-- Renderizado dinamicamente via JS -->
+  </div>
+  <p class="gallery-hint">arraste para o lado · toque em uma foto para ampliar</p>
+</section>
+
+<!-- ==========================================================================
+     BLOCO HTML 4: DRESS CODE (TRAJES SUGERIDOS E PALETA)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Orienta os convidados sobre o estilo de vestimenta adequado para a cerimônia
+     e festa, incluindo paletas sugeridas e cores reservadas para a noiva.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • Tipo de traje no <h2> (ex: Esporte Fino, Passeio Completo, etc.)
+     • Dicas para Convidadas e Convidados
+     • Cores nas amostras <span class="swatch" style="background:#...">
+     ========================================================================== -->
+<section class="section" id="dresscode">
+  <div class="kicker-line"><span>dress code</span></div>
+  <h2 style="font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 24px;">Traje Esporte Fino</h2>
+  <div class="dress-cards">
+    <div class="d-card">
+      <h3><i class="fa-solid fa-person-dress" style="margin-right: 8px; color: var(--wine-dark);"></i>Convidadas</h3>
+      <p class="d-sub">vestido midi ou longo, macacão elegante</p>
+      <p>Prefira tecidos fluidos e confortáveis. A celebração é ao ar livre no jardim, por isso saltos em bloco ou anabela são ideais.</p>
+      <div class="swatches">
+        <span class="swatch" style="background:#8B4F49" title="Terracota"></span>
+        <span class="swatch" style="background:#5C7259" title="Verde Oliva"></span>
+        <span class="swatch" style="background:#A8853E" title="Dourado"></span>
+        <span class="swatch" style="background:#6E4B3A" title="Marrom Café"></span>
+        <span class="swatch" style="background:#C7A97A" title="Areia"></span>
+      </div>
+      <p class="swatch-note">paleta sugerida: terracota · oliva · dourado · areia · rose</p>
+      <p class="d-avoid">Pedimos a gentileza de reservar as cores branco, off-white e bege muito claro para a noiva.</p>
+    </div>
+    <div class="d-card">
+      <h3><i class="fa-solid fa-user-tie" style="margin-right: 8px; color: var(--wine-dark);"></i>Convidados</h3>
+      <p class="d-sub">costume, camisa social ou calça de alfaiataria</p>
+      <p>Camisa social com blazer ou paletó leve. Gravata é opcional — o clima é campestre e acolhedor.</p>
+      <div class="swatches">
+        <span class="swatch" style="background:#2F3B2E" title="Verde Floresta"></span>
+        <span class="swatch" style="background:#3F5240" title="Verde Musgo"></span>
+        <span class="swatch" style="background:#6E3B37" title="Vinho"></span>
+        <span class="swatch" style="background:#5A4632" title="Marrom"></span>
+        <span class="swatch" style="background:#8E8267" title="Caqui"></span>
+      </div>
+      <p class="swatch-note">paleta sugerida: tons terrosos · azul marinho · cinza chumbo · caqui</p>
+      <p class="d-avoid">Evite calça jeans rasgada, bermudas e tênis de academia.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     BLOCO HTML 5: LISTA DE PRESENTES DE CASAMENTO & PIX
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Apresenta a lista de presentes e cotas com visualização em grade e modal PIX.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • Título e mensagem introdutória da lista de presentes
+     • Para alterar os presentes padrão, edite o array `initialGifts` no BLOCO JS 4.
+     • Os noivos também podem adicionar/remover presentes direto no Painel dos Noivos!
+     ========================================================================== -->
+<section class="gifts-section section-wide" id="gifts">
+  <div class="section" style="padding-top: 0; padding-bottom: 0;">
+    <div class="gifts-header-wrap">
+      <div class="gifts-header-title">
+        <div class="kicker-line"><span>lista de casamento</span></div>
+        <h2>Lista de Presentes</h2>
+        <p>Escolha um item com carinho para nos ajudar a montar nosso novo lar ou fazer da lua de mel um sonho real.</p>
+      </div>
+      <div class="gifts-header-action">
+        <button class="btn btn-solid btn-toggle-gifts" id="btnToggleGifts" aria-expanded="false" title="Abrir ou recolher a lista de presentes">
+          <span id="toggleGiftsIcon"><i class="fa-solid fa-gift"></i></span>
+          <span id="toggleGiftsBtnText">Ver Lista de Presentes</span>
+          <span class="gifts-count-badge" id="giftsCountBadge">0 itens</span>
+          <i class="fa-solid fa-chevron-down" id="toggleGiftsChevron" style="font-size: 0.8rem; margin-left: 4px;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO EXPANSÍVEL (GRADE COMPLETA DE PRESENTES) -->
+    <div class="gifts-collapsible-wrapper is-collapsed" id="giftsCollapsibleWrapper">
+      <div class="gifts-grid" id="giftsGrid">
+        <!-- Cards de presentes carregados dinamicamente -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     BLOCO HTML 6: FORMULÁRIO DE CONFIRMAÇÃO DE PRESENÇA (RSVP)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Coleta as confirmações de presença dos convidados (nome, quantidade de familiares,
+     telefone/WhatsApp e observações especiais como restrições alimentares).
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • Data limite para confirmação no texto de instrução
+     • Textos dos rótulos dos campos
+     ========================================================================== -->
+<section class="section rsvp-section" id="rsvp">
+  <div class="kicker-line"><span>confirmação de presença</span></div>
+  <h2 style="font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 8px;">Contamos com você!</h2>
+  <p style="opacity: 0.78; max-width: 52ch;">Por favor, confirme sua presença até 14 de fevereiro de 2027 para organizarmos tudo com o devido carinho.</p>
+
+  <form class="rsvp-form" id="rsvpForm">
+    <div class="field-row">
+      <div class="field" style="margin-bottom: 0;">
+        <label for="familyName">Nome completo do convidado(a) *</label>
+        <input type="text" id="familyName" placeholder="Ex: João da Silva" required>
+      </div>
+      <div class="field" style="margin-bottom: 0;">
+        <label for="peopleCount">Quantas pessoas na família *</label>
+        <input type="number" id="peopleCount" min="1" max="10" value="1" required>
+      </div>
+    </div>
+    <div class="field">
+      <label for="rsvpPhone">WhatsApp / Telefone para contato</label>
+      <input type="text" id="rsvpPhone" placeholder="(11) 99999-9999">
+    </div>
+    <div class="field">
+      <label for="rsvpNote">Mensagem ou observação especial (restrição alimentar, etc.)</label>
+      <textarea id="rsvpNote" rows="2" placeholder="Ex: Somos vegetarianos / vamos levar bebê de colo"></textarea>
+    </div>
+    <button type="submit" class="btn btn-solid rsvp-submit"><i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i>Confirmar Presença no Casamento</button>
+    <div class="rsvp-confirm" id="rsvpConfirm"></div>
+  </form>
+
+  <div class="rsvp-list" id="rsvpSummary"></div>
+</section>
+
+<!-- ==========================================================================
+     BLOCO HTML 7: ESPAÇO EXCLUSIVO DOS NOIVOS (ACESSO À PLANILHA & PAINEL)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Área protegida por código PIN onde os noivos visualizam em tempo real a lista de
+     presenças confirmadas, recados dos convidados, presentes recebidos e exportam para CSV.
+     ========================================================================== -->
+<section class="section-wide couple-area-section" id="area-noivos">
+  <div class="section">
+    <div class="kicker-line"><span>área dos noivos</span></div>
+    <h2 style="font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 8px;">Espaço Exclusivo de Michelly &amp; Thiago</h2>
+    <p style="opacity: 0.8; max-width: 60ch;">Acompanhe em tempo real a lista de presenças confirmadas (RSVP), confira os presentes recebidos, exporte a planilha em Excel/CSV e gerencie todos os itens do casamento.</p>
+
+    <!-- Card de Acesso e Gestão dos Noivos -->
+    <div class="couple-admin-card">
+      <div class="couple-admin-header">
+        <div class="couple-admin-status">
+          <span class="admin-badge" id="adminBadge"><i class="fa-solid fa-lock" style="font-size: 0.75rem;"></i> Acesso restrito</span>
+          <span id="adminStatusMsg" style="font-size: 0.88rem; color: var(--ink-light);">Planilha de respostas e cadastro de presentes liberados para os noivos com código.</span>
+        </div>
+        <div class="couple-admin-actions">
+          <button class="btn btn-solid" id="btnAdminOpenSheet" style="font-size: 0.86rem; padding: 9px 18px;"><i class="fa-solid fa-table-list" style="margin-right: 6px;"></i>Acessar Planilha &amp; Painel dos Noivos</button>
+          <button class="btn btn-ghost" id="btnAdminAuth" style="display: inline-flex;"><i class="fa-solid fa-lock" style="margin-right: 6px;"></i>Digitar Código</button>
+          <button class="btn btn-ghost" id="btnChangeCode" style="display: none;"><i class="fa-solid fa-key" style="margin-right: 6px;"></i>Alterar Código</button>
+          <button class="btn btn-ghost" id="btnAdminLogout" style="display: none; color: var(--wine-dark);"><i class="fa-solid fa-right-from-bracket" style="margin-right: 6px;"></i>Sair</button>
+        </div>
+      </div>
+
+      <!-- Resumo dos recursos do painel -->
+      <div class="couple-features-grid">
+        <div class="couple-feature-item">
+          <div class="couple-feature-number">1</div>
+          <div>
+            <h4>Planilha de Confirmações (RSVP)</h4>
+            <p>Lista detalhada de presenças em tempo real com contagem de convidados, telefone e recados.</p>
+          </div>
+        </div>
+        <div class="couple-feature-item">
+          <div class="couple-feature-number">2</div>
+          <div>
+            <h4>Cadastro &amp; Gestão de Presentes</h4>
+            <p>Adicione novos presentes com fotos e valores, ou gerencie os itens já cadastrados.</p>
+          </div>
+        </div>
+        <div class="couple-feature-item">
+          <div class="couple-feature-number">3</div>
+          <div>
+            <h4>Exportação em Planilha (CSV)</h4>
+            <p>Baixe a lista completa com um clique para abrir no Excel ou Google Planilhas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     BLOCO HTML 8: RODAPÉ & CRÉDITOS DO PROJETO
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Mensagem final com carinho dos noivos e assinatura de desenvolvimento.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • Frase de agradecimento no <p class="footer-love-msg">
+     • Nome do(a) desenvolvedor(a) no <div class="creator-credits">
+     ========================================================================== -->
+<footer>
+  <p class="footer-love-msg">Com todo amor, Michelly &amp; Thiago — 14 de março de 2027</p>
+  <div class="footer-divider"></div>
+  <div class="creator-credits">
+    <span>Desenvolvido por <strong>Lívia Amaral - @yrfav.liv</strong></span>
+  </div>
+</footer>
+
+<!-- ==========================================================================
+     BLOCO HTML 9: MODAIS, POP-OUTS E LIGHTBOXES DO SISTEMA
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Reúne todas as janelas sobrepostas do site:
+     1. Dashboard Completo dos Noivos (Planilha RSVP + Gestão de Presentes + Configurações)
+     2. Inserção Manual de Convidado na Planilha
+     3. Modal de Autenticação por PIN de 4 dígitos
+     4. Modal de Troca de Senha/PIN
+     5. Pop-out Modal de Presentear com PIX e Envio de Mensagem com Carinho
+     6. Lightbox do Convite em Tela Cheia
+     7. Lightbox para Visualização de Fotos da Galeria
+     ========================================================================== -->
+<!-- ============ MODAL 1: DASHBOARD & PLANILHA COMPLETA DOS NOIVOS ============ -->
+<div class="modal-backdrop" id="modalCoupleDashboard">
+  <div class="modal-box modal-box-wide">
+    <button class="modal-close" id="closeCoupleDashboard" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    
+    <div class="dash-header">
+      <div class="dash-title-wrap">
+        <div>
+          <h3>Área dos Noivos — Michelly &amp; Thiago</h3>
+        </div>
+        <p>Acompanhamento de confirmações de presença em tempo real e cadastro da lista de presentes.</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button type="button" class="btn btn-ghost" id="btnDashLogout" style="font-size: 0.78rem; padding: 5px 12px;"><i class="fa-solid fa-right-from-bracket" style="margin-right: 5px;"></i>Sair do Painel</button>
+      </div>
+    </div>
+
+    <!-- Abas de Navegação (Planilha RSVP, Cadastrar/Gerenciar Presentes, Alterar Código) -->
+    <div class="dash-nav-tabs" role="tablist">
+      <button type="button" class="dash-tab-btn active" id="tabBtnRsvp" role="tab"><i class="fa-solid fa-clipboard-check" style="margin-right: 6px;"></i>Planilha RSVP (Confirmações)</button>
+      <button type="button" class="dash-tab-btn" id="tabBtnManageGifts" role="tab"><i class="fa-solid fa-gift" style="margin-right: 6px;"></i>Cadastrar &amp; Gerenciar Presentes</button>
+      <button type="button" class="dash-tab-btn" id="tabBtnSettings" role="tab"><i class="fa-solid fa-key" style="margin-right: 6px;"></i>Alterar Código de Acesso</button>
+    </div>
+
+    <!-- CONTEÚDO DA ABA 1: PLANILHA RSVP -->
+    <div id="tabPaneRsvp">
+      <!-- Métricas RSVP -->
+      <div class="dash-metrics-grid">
+        <div class="metric-card">
+          <span class="m-title">Total Confirmados</span>
+          <span class="m-value" id="dashTotalGuests">0</span>
+          <span class="m-sub">pessoas no total</span>
+        </div>
+        <div class="metric-card">
+          <span class="m-title">Respostas / Famílias</span>
+          <span class="m-value" id="dashTotalEntries">0</span>
+          <span class="m-sub">formulários enviados</span>
+        </div>
+        <div class="metric-card">
+          <span class="m-title">Com Observações</span>
+          <span class="m-value" id="dashTotalNotes">0</span>
+          <span class="m-sub">recados e restrições</span>
+        </div>
+      </div>
+
+      <!-- Barra de Ferramentas -->
+      <div class="sheet-toolbar">
+        <div class="sheet-search">
+          <input type="text" id="dashRsvpSearch" placeholder="Buscar por convidado, telefone ou recado...">
+        </div>
+        <div class="sheet-btn-group">
+          <button type="button" class="btn-sheet primary" id="btnExportRsvpCsv" title="Exportar para Excel / Google Planilhas"><i class="fa-solid fa-file-arrow-down" style="margin-right: 6px;"></i>Exportar Planilha (CSV)</button>
+          <button type="button" class="btn-sheet" id="btnAddManualRsvp"><i class="fa-solid fa-user-plus" style="margin-right: 6px;"></i>+ Adicionar Manual</button>
+        </div>
+      </div>
+
+      <!-- Tabela da Planilha -->
+      <div class="sheet-table-wrap">
+        <table class="sheet-table" id="dashRsvpTable">
+          <thead>
+            <tr>
+              <th style="width: 45px; text-align: center;">#</th>
+              <th>Nome Convidado / Família</th>
+              <th style="width: 95px; text-align: center;">Pessoas</th>
+              <th style="width: 140px;">WhatsApp / Telefone</th>
+              <th>Recado / Restrições</th>
+              <th style="width: 140px;">Data &amp; Hora</th>
+              <th style="width: 70px; text-align: center;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="dashRsvpTbody">
+            <!-- Linhas inseridas dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO DA ABA 2: CADASTRAR & GERENCIAR LISTA DE PRESENTES -->
+    <div id="tabPaneManageGifts" style="display: none;">
+      <div class="admin-create-card" style="margin-top: 0; margin-bottom: 24px;">
+        <h3 style="font-size: 1.25rem; color: var(--wine-dark); margin-bottom: 6px;">Cadastrar Novo Presente</h3>
+        <p style="font-size: 0.84rem; color: var(--ink-light); margin-bottom: 16px;">Preencha os dados do presente para adicioná-lo imediatamente à grade do site.</p>
+        
+        <form id="dashAddGiftForm">
+          <div class="gift-form-grid">
+            <div>
+              <label for="dashGiftName">Nome do Presente *</label>
+              <input type="text" id="dashGiftName" placeholder="Ex: Jogo de Taças de Cristal" required>
+            </div>
+            <div>
+              <label for="dashGiftPrice">Valor em Reais (R$) *</label>
+              <input type="number" id="dashGiftPrice" step="0.01" min="1" placeholder="Ex: 280.00" required>
+            </div>
+            <div>
+              <label for="dashGiftCategory">Categoria</label>
+              <select id="dashGiftCategory">
+                <option value="Cozinha">Cozinha &amp; Gourmet</option>
+                <option value="Eletros">Eletrodomésticos</option>
+                <option value="Casa & Conforto">Casa &amp; Conforto</option>
+                <option value="Mesa Posta">Mesa Posta</option>
+                <option value="Lua de Mel">Lua de Mel</option>
+                <option value="Experiências">Experiências a Dois</option>
+              </select>
+            </div>
+            <div>
+              <label for="dashGiftImg">URL da Foto (opcional)</label>
+              <input type="url" id="dashGiftImg" placeholder="https://exemplo.com/foto.jpg">
+            </div>
+            <div class="form-field-full">
+              <label style="margin-bottom: 6px; display: block;">Sugestões rápidas de fotos:</label>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.74rem;" onclick="window.weddingApp.setGiftPhotoPreset('cozinha')">Panelas / Cozinha</button>
+                <button type="button" class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.74rem;" onclick="window.weddingApp.setGiftPhotoPreset('cafeteira')">Cafeteira</button>
+                <button type="button" class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.74rem;" onclick="window.weddingApp.setGiftPhotoPreset('eletro')">Air Fryer / Eletros</button>
+                <button type="button" class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.74rem;" onclick="window.weddingApp.setGiftPhotoPreset('cama')">Cama &amp; Enxoval</button>
+                <button type="button" class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.74rem;" onclick="window.weddingApp.setGiftPhotoPreset('luademel')">Jantar / Lua de Mel</button>
+                <button type="button" class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.74rem;" onclick="window.weddingApp.setGiftPhotoPreset('viagem')">Passeio / Viagem</button>
+              </div>
+            </div>
+            <div class="form-field-full">
+              <label for="dashGiftDesc">Descrição breve do presente (opcional)</label>
+              <input type="text" id="dashGiftDesc" placeholder="Ex: Conjunto com 6 taças finas de vinho para celebrações em casa">
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button type="submit" class="btn btn-solid" style="padding: 10px 22px; font-size: 0.88rem;">
+              + Cadastrar Presente na Grade
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h4 style="font-size: 1.1rem; margin: 0;">Presentes Cadastrados na Grade:</h4>
+        <span id="dashGiftCountInfo" style="font-size: 0.82rem; color: var(--ink-light);"></span>
+      </div>
+      <div class="sheet-table-wrap">
+        <table class="sheet-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th style="width: 120px;">Categoria</th>
+              <th style="width: 110px;">Valor</th>
+              <th style="width: 160px;">Status</th>
+              <th style="width: 140px; text-align: center;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="dashManageGiftsTbody">
+            <!-- Inserido dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO DA ABA 3: ALTERAR CÓDIGO -->
+    <div id="tabPaneSettings" style="display: none;">
+      <div style="max-width: 420px; margin: 20px auto; background: #FFF; padding: 24px; border: 1px solid var(--line); border-radius: 8px;">
+        <h4 style="font-size: 1.25rem; color: var(--wine-dark); margin-bottom: 6px;">Alterar Código dos Noivos</h4>
+        <p style="font-size: 0.85rem; color: var(--ink-light); margin-bottom: 18px;">
+          Defina uma nova senha de 4 dígitos para proteger o acesso à planilha e à lista.
+        </p>
+        <form id="dashChangeCodeForm">
+          <div class="field">
+            <label for="dashNewPasscode">Novo código (4 dígitos numéricos) *</label>
+            <input type="password" id="dashNewPasscode" maxlength="4" placeholder="Ex: 2027" pattern="[0-9]{4}" required>
+          </div>
+          <div class="field">
+            <label for="dashConfirmPasscode">Confirmar novo código *</label>
+            <input type="password" id="dashConfirmPasscode" maxlength="4" placeholder="Repita os 4 dígitos" pattern="[0-9]{4}" required>
+          </div>
+          <button type="submit" class="btn btn-solid" style="width: 100%;">
+            Atualizar Código
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ MODAL: ADICIONAR CONFIRMAÇÃO MANUAL (RSVP) ============ -->
+<div class="modal-backdrop" id="modalAddManualRsvp">
+  <div class="modal-box">
+    <button class="modal-close" id="closeManualRsvpModal" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <h3 style="font-size: 1.35rem; color: var(--wine-dark); margin-bottom: 8px;">Adicionar Confirmação Manual</h3>
+    <p style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 18px;">
+      Registrar presença de convidado que confirmou por WhatsApp, ligação ou pessoalmente.
+    </p>
+    <form id="formManualRsvp">
+      <div class="field">
+        <label for="manualName">Nome do Convidado / Família *</label>
+        <input type="text" id="manualName" placeholder="Ex: Tio Roberto e Família" required>
+      </div>
+      <div class="field">
+        <label for="manualCount">Quantidade de Pessoas *</label>
+        <input type="number" id="manualCount" min="1" max="20" value="2" required>
+      </div>
+      <div class="field">
+        <label for="manualPhone">WhatsApp / Telefone</label>
+        <input type="text" id="manualPhone" placeholder="(11) 99999-9999">
+      </div>
+      <div class="field">
+        <label for="manualNote">Observação / Restrições (opcional)</label>
+        <input type="text" id="manualNote" placeholder="Ex: Confirmou via WhatsApp">
+      </div>
+      <button type="submit" class="btn btn-solid" style="width: 100%;">
+        Salvar na Planilha
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: CÓDIGO DO CASAL ============ -->
+<div class="modal-backdrop" id="modalPasscode">
+  <div class="modal-box">
+    <button class="modal-close" id="closePasscodeModal" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <div style="text-align: center;">
+      <h3 style="font-size: 1.5rem; margin-bottom: 6px;">Área Exclusiva dos Noivos</h3>
+      <p style="font-size: 0.88rem; opacity: 0.8; max-width: 36ch; margin: 0 auto 20px;">
+        Digite o código de 4 dígitos do casal para acessar a <strong>Planilha de Confirmações</strong> e cadastrar a <strong>Lista de Presentes</strong>.
+      </p>
+
+      <form id="passcodeForm">
+        <div class="passcode-inputs">
+          <input type="password" maxlength="1" class="passcode-digit" id="code1" inputmode="numeric" required autofocus>
+          <input type="password" maxlength="1" class="passcode-digit" id="code2" inputmode="numeric" required>
+          <input type="password" maxlength="1" class="passcode-digit" id="code3" inputmode="numeric" required>
+          <input type="password" maxlength="1" class="passcode-digit" id="code4" inputmode="numeric" required>
+        </div>
+        <p id="passcodeError" style="color: var(--wine); font-size: 0.85rem; margin-bottom: 16px; display: none;">
+          Código incorreto. Tente novamente ou use o código padrão <strong>1403</strong>.
+        </p>
+        <button type="submit" class="btn btn-solid" style="width: 100%; padding: 12px;">
+          Entrar no Painel dos Noivos
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: ALTERAR CÓDIGO DO CASAL ============ -->
+<div class="modal-backdrop" id="modalChangeCode">
+  <div class="modal-box">
+    <button class="modal-close" id="closeChangeCodeModal" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <div>
+      <h3 style="font-size: 1.4rem; margin-bottom: 8px;">Alterar Código de Acesso</h3>
+      <p style="font-size: 0.88rem; opacity: 0.8; margin-bottom: 20px;">
+        Escolha um novo código de 4 dígitos numéricos que vocês lembrem com facilidade.
+      </p>
+
+      <form id="changeCodeForm">
+        <div class="field">
+          <label for="newPasscode">Novo código (4 dígitos numéricos) *</label>
+          <input type="password" id="newPasscode" maxlength="4" placeholder="Ex: 2027" pattern="[0-9]{4}" required>
+        </div>
+        <div class="field">
+          <label for="confirmPasscode">Confirme o novo código *</label>
+          <input type="password" id="confirmPasscode" maxlength="4" placeholder="Repita o código" pattern="[0-9]{4}" required>
+        </div>
+        <button type="submit" class="btn btn-solid" style="width: 100%;">
+          Salvar Novo Código
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============ POP-OUT MODAL: PRESENTEAR COM PIX ============ -->
+<div class="modal-backdrop" id="modalPresentear">
+  <div class="modal-box modal-pix-box">
+    <button class="modal-close" id="closePresentearModal" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <div id="presentearModalContent">
+      <!-- Preenchido dinamicamente via JS ao clicar em Presentear -->
+    </div>
+  </div>
+</div>
+
+<!-- ============ LIGHTBOX (CONVITE EM TELA CHEIA) ============ -->
+<div class="modal-backdrop" id="lightboxInvite">
+  <div class="modal-box" style="max-width: 620px; padding: 24px; text-align: center;">
+    <button class="modal-close" id="closeInvite" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <div id="inviteLightboxContent">
+      <img id="inviteImageFull" style="width: 100%; border-radius: 4px; display: none;" alt="Convite de Casamento">
+      <div id="inviteDefaultFull" style="padding: 30px 16px;">
+        <p style="font-family: 'Fraunces', serif; font-style: italic; color: var(--wine); font-size: 1.1rem; margin-bottom: 6px;">Com muita alegria convidamos você para</p>
+        <h2 style="font-size: 2.4rem; margin-bottom: 6px;">Michelly &amp; Thiago</h2>
+        <p style="color: var(--sage-dark); font-size: 0.95rem; margin-bottom: 20px;">para celebrar o início de uma nova história de amor</p>
+        <div style="width: 40px; height: 1px; background: var(--gold); margin: 18px auto;"></div>
+        <p style="font-size: 1.1rem; font-weight: 500; margin-bottom: 4px;">Sábado, 14 de março de 2027 — às 17:00h</p>
+        <p style="font-size: 0.95rem; opacity: 0.85; margin-bottom: 18px;">Sítio das Oliveiras · Estrada Municipal das Flores, km 4 · Itu — SP</p>
+        <p style="font-family: 'Fraunces', serif; font-style: italic; color: var(--wine-dark); font-size: 0.95rem;">"O amor não se vê com os olhos, mas com o coração."</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LIGHTBOX (GALERIA DE FOTOS) ============ -->
+<div class="modal-backdrop" id="lightboxPhoto">
+  <div class="modal-box" style="max-width: 680px; padding: 0; overflow: hidden; background: #000;">
+    <button class="modal-close" id="closePhoto" style="background: rgba(255,255,255,0.85);" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <div id="photoLargeImg" style="width: 100%; aspect-ratio: 4/5; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 24px; position: relative;">
+      <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.8) 100%);"></div>
+      <p style="position: relative; font-family: 'Fraunces', serif; font-style: italic; color: #FFF; font-size: 1.15rem; text-shadow: 0 2px 8px rgba(0,0,0,0.6);" id="photoLargeCaption"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toastMessage"></div>
+
+<script>
+(function(){
+  /* ==========================================================================
+     BLOCO JS 1: DADOS PRINCIPAIS DO CASAL & CONFIGURAÇÕES GERAIS
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Define as configurações centrais do casamento (imagem do convite, dados de PIX,
+     PIN de 4 dígitos inicial dos noivos e chaves do armazenamento local).
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • INVITE_IMAGE_URL: Link da foto oficial do convite vertical (ou "" para tipografia)
+     • PIX_KEY: Chave PIX oficial para recebimento dos presentes
+     • PIX_RECEIVER: Nome do titular da conta bancária
+     • DEFAULT_COUPLE_PASSCODE: PIN inicial de 4 dígitos para os noivos entrarem no painel
+     ========================================================================== */
+  /* CONFIGURAÇÃO DO CONVITE (Apenas o programador coloca a imagem no código)
+     ==========================================================================
+     Insira abaixo o link ou caminho da imagem oficial do convite.
+     - Deixe como "" (vazio) para exibir o convite clássico tipográfico padrão.
+     - A imagem permanece 100% OCULTA enquanto o envelope estiver fechado,
+       e é revelada com animação suave e elegante ao clicar para abrir!
+     ========================================================================== */
+  var INVITE_IMAGE_URL = "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85";
+
+  /* Dados PIX dos Noivos para os presentes */
+  var PIX_KEY = "michelly.thiago.casamento@gmail.com";
+  var PIX_RECEIVER = "Michelly & Thiago (Casamento)";
+
+  /* Código Padrão Inicial do Casal */
+  var DEFAULT_COUPLE_PASSCODE = "1403";
+
+  /* Armazenamento Local Seguro */
+  var STORAGE_KEYS = {
+    GIFTS: 'wedding_gifts_grid_v2',
+    PASSCODE: 'wedding_couple_passcode_v2',
+    RSVP: 'wedding_rsvps_list_v2'
+  };
+
+  /* Helper para ler/salvar localStorage */
+  function getLocal(key, defaultVal){
+    try {
+      var item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : defaultVal;
+    } catch(e) {
+      return defaultVal;
+    }
+  }
+  function setLocal(key, val){
+    try {
+      localStorage.setItem(key, JSON.stringify(val));
+    } catch(e) {}
+  }
+
+  /* Exibir Toast Notification */
+  var toastTimer;
+  function showToast(msg){
+    var toast = document.getElementById('toastMessage');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){
+      toast.classList.remove('show');
+    }, 3200);
+  }
+
+  /* ==========================================================================
+     BLOCO JS 2: LÓGICA DE ABERTURA E INTERAÇÃO 3D DO ENVELOPE
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Gerencia os estados de clique no envelope, animação de rotação da aba superior,
+     deslizamento da carta com o convite e fechamento suave em 3 etapas.
+     ========================================================================== */
+  var envelope = document.getElementById('envelope');
+  var letter = document.getElementById('letter');
+  var inviteImg = document.getElementById('inviteImg');
+  var letterFallback = document.getElementById('letterFallback');
+  var heroActionBtns = document.getElementById('heroActionBtns');
+  var heroTap = document.getElementById('heroTap');
+  var lightboxInvite = document.getElementById('lightboxInvite');
+  var inviteImageFull = document.getElementById('inviteImageFull');
+  var inviteDefaultFull = document.getElementById('inviteDefaultFull');
+
+  // Inicializa imagem se configurada pelo programador
+  if (INVITE_IMAGE_URL) {
+    inviteImg.src = INVITE_IMAGE_URL;
+    inviteImg.style.display = 'block';
+    letterFallback.style.display = 'none';
+
+    inviteImageFull.src = INVITE_IMAGE_URL;
+    inviteImageFull.style.display = 'block';
+    inviteDefaultFull.style.display = 'none';
+  } else {
+    inviteImg.style.display = 'none';
+    letterFallback.style.display = 'flex';
+    inviteImageFull.style.display = 'none';
+    inviteDefaultFull.style.display = 'block';
+  }
+
+  var isEnvelopeAnimating = false;
+
+  /* Abre o envelope com animação 3D e revela o convite */
+  function openEnvelope() {
+    if (isEnvelopeAnimating) return;
+    isEnvelopeAnimating = true;
+    envelope.classList.remove('closing', 'closing-flap', 'sealing');
+    envelope.classList.add('opened');
+    heroTap.style.opacity = '0';
+    heroActionBtns.style.display = 'flex';
+    setTimeout(function(){
+      isEnvelopeAnimating = false;
+    }, 1000);
+  }
+
+  /* Fecha o envelope com animação 3D fluida e realista em etapas:
+     1. O convite desliza de volta para o interior do envelope (0ms)
+     2. A aba triangular desce e cobre o envelope (450ms)
+     3. O selo de cera botânico sela as dobras no centro (900ms)
+  */
+  function closeEnvelope() {
+    if (isEnvelopeAnimating) return;
+    isEnvelopeAnimating = true;
+
+    // Etapa 1: Inicia descida do convite
+    envelope.classList.remove('opened');
+    envelope.classList.add('closing');
+    heroActionBtns.style.display = 'none';
+
+    // Etapa 2: A aba superior se dobra sobre o envelope
+    setTimeout(function() {
+      envelope.classList.add('closing-flap');
+    }, 400);
+
+    // Etapa 3: O selo de cera sela o envelope
+    setTimeout(function() {
+      envelope.classList.add('sealing');
+    }, 850);
+
+    // Conclusão da animação e restauração do estado limpo inicial
+    setTimeout(function() {
+      envelope.classList.remove('closing', 'closing-flap', 'sealing');
+      heroTap.style.opacity = '1';
+      isEnvelopeAnimating = false;
+    }, 1300);
+  }
+
+  /* Eventos de clique e acessibilidade via teclado para o envelope */
+  envelope.addEventListener('click', function(e) {
+    if (!envelope.classList.contains('opened')) {
+      openEnvelope();
+    } else {
+      // Se já estiver aberto, clicar na carta abre o convite em tela cheia (lightbox)
+      openModal(lightboxInvite);
+    }
+  });
+
+  envelope.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (!envelope.classList.contains('opened')) openEnvelope();
+      else openModal(lightboxInvite);
+    }
+  });
+
+  /* Botão para ampliar o convite em tela cheia */
+  document.getElementById('btnExpandInvite').addEventListener('click', function(){
+    openModal(lightboxInvite);
+  });
+
+  /* Botão para fechar o envelope */
+  document.getElementById('btnCloseEnvelope').addEventListener('click', function(e){
+    e.stopPropagation();
+    closeEnvelope();
+  });
+
+  /* Botão para fechar o lightbox do convite */
+  document.getElementById('closeInvite').addEventListener('click', function(){
+    closeModal(lightboxInvite);
+  });
+
+  /* ==========================================================================
+     BLOCO JS 3: GERENCIAMENTO UNIVERSAL DE MODAIS E LIGHTBOXES
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Funções reutilizáveis `openModal` e `closeModal`, controle do scroll do body e
+     fechamento automático ao pressionar a tecla ESC ou clicar fora da caixa.
+     ========================================================================== */
+  function openModal(modalEl) {
+    modalEl.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(modalEl) {
+    modalEl.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  // Fechar modais ao clicar no backdrop ou tecla ESC
+  document.querySelectorAll('.modal-backdrop').forEach(function(mb){
+    mb.addEventListener('click', function(e){
+      if (e.target === mb) closeModal(mb);
+    });
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-backdrop.show').forEach(function(mb){
+        closeModal(mb);
+      });
+    }
+  });
+
+  /* ==========================================================================
+     BLOCO JS 4: CATÁLOGO PADRÃO DE PRESENTES (ITENS INICIAIS)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Array de objetos com a lista de presentes inicial (nome, valor, categoria, foto
+     e descrição). Se o usuário adicionar ou excluir presentes, as alterações ficam
+     salvas com segurança no navegador.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • Adicione novos itens, altere valores ou fotos padrão no array `initialGifts`.
+     ========================================================================== */
+  var initialGifts = [
+    {
+      id: 'g1',
+      name: 'Jogo de Panelas Cerâmica Premium',
+      desc: 'Conjunto antiaderente 5 peças com tampa de vidro temperado',
+      price: 480.00,
+      imageUrl: 'https://images.unsplash.com/photo-1584990347449-39908cf4fb44?auto=format&fit=crop&w=800&q=80',
+      category: 'Cozinha',
+      reserved: false,
+      reservedBy: ''
+    },
+    {
+      id: 'g2',
+      name: 'Cafeteira Espresso & Cappuccino',
+      desc: 'Para os cafés da manhã preguiçosos de fim de semana',
+      price: 380.00,
+      imageUrl: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=800&q=80',
+      category: 'Eletros',
+      reserved: false,
+      reservedBy: ''
+    },
+    {
+      id: 'g3',
+      name: 'Fritadeira Air Fryer Digital 4.5L',
+      desc: 'Indispensável e prática para a rotina da nova casa',
+      price: 290.00,
+      imageUrl: 'https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=800&q=80',
+      category: 'Eletros',
+      reserved: false,
+      reservedBy: ''
+    },
+    {
+      id: 'g4',
+      name: 'Jantar Romântico na Lua de Mel',
+      desc: 'Uma noite especial à luz de velas para os recém-casados',
+      price: 350.00,
+      imageUrl: 'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=800&q=80',
+      category: 'Lua de Mel',
+      reserved: false,
+      reservedBy: ''
+    },
+    {
+      id: 'g5',
+      name: 'Jogo de Cama Algodão Egípcio 400 Fios',
+      desc: 'Lençóis macios e elegantes tamanho Queen',
+      price: 320.00,
+      imageUrl: 'https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=800&q=80',
+      category: 'Casa & Conforto',
+      reserved: false,
+      reservedBy: ''
+    },
+    {
+      id: 'g6',
+      name: 'Robô Aspirador Inteligente',
+      desc: 'Para manter a casa limpa e sobrar mais tempo juntinhos',
+      price: 650.00,
+      imageUrl: 'https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?auto=format&fit=crop&w=800&q=80',
+      category: 'Eletros',
+      reserved: false,
+      reservedBy: ''
+    },
+    {
+      id: 'g7',
+      name: 'Passeio de Barco ao Pôr do Sol',
+      desc: 'Experiência inesquecível a dois nas águas da serra',
+      price: 420.00,
+      imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
+      category: 'Lua de Mel',
+      reserved: false,
+      reservedBy: ''
+    },
+    {
+      id: 'g8',
+      name: 'Aparelho de Jantar Porcelana 20 Peças',
+      desc: 'Pratos rasos, fundos, sobremesa e xícaras finas',
+      price: 490.00,
+      imageUrl: 'https://images.unsplash.com/photo-1615865417491-9941019fbc00?auto=format&fit=crop&w=800&q=80',
+      category: 'Cozinha',
+      reserved: false,
+      reservedBy: ''
+    }
+  ];
+
+  var gifts = getLocal(STORAGE_KEYS.GIFTS, initialGifts);
+  var couplePasscode = getLocal(STORAGE_KEYS.PASSCODE, DEFAULT_COUPLE_PASSCODE);
+  var isCoupleAuthenticated = false;
+
+  function saveGifts() {
+    setLocal(STORAGE_KEYS.GIFTS, gifts);
+  }
+
+  function formatPrice(val) {
+    var num = parseFloat(val) || 0;
+    return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  /* ==========================================================================
+     BLOCO JS 5: RENDERIZAÇÃO DA GRADE DE PRESENTES & MODAL DE PAGAMENTO PIX
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Constrói os cards de presentes na tela, gerencia o pop-out para presentear via PIX,
+     cópia da chave com 1 clique e controle de minimização/expansão da lista.
+     ========================================================================== */
+  var isGiftsListExpanded = false;
+  var btnToggleGifts = document.getElementById('btnToggleGifts');
+  var giftsCollapsibleWrapper = document.getElementById('giftsCollapsibleWrapper');
+  var toggleGiftsBtnText = document.getElementById('toggleGiftsBtnText');
+  var toggleGiftsChevron = document.getElementById('toggleGiftsChevron');
+
+  function setGiftsExpandedState(expanded, scrollIntoView) {
+    isGiftsListExpanded = expanded;
+    if (giftsCollapsibleWrapper) {
+      if (expanded) {
+        giftsCollapsibleWrapper.classList.remove('is-collapsed');
+        giftsCollapsibleWrapper.classList.add('is-open');
+        if (toggleGiftsBtnText) toggleGiftsBtnText.textContent = 'Recolher Lista de Presentes';
+        if (toggleGiftsChevron) toggleGiftsChevron.className = 'fa-solid fa-chevron-up';
+        if (btnToggleGifts) btnToggleGifts.setAttribute('aria-expanded', 'true');
+      } else {
+        giftsCollapsibleWrapper.classList.add('is-collapsed');
+        giftsCollapsibleWrapper.classList.remove('is-open');
+        if (toggleGiftsBtnText) toggleGiftsBtnText.textContent = 'Ver Lista de Presentes';
+        if (toggleGiftsChevron) toggleGiftsChevron.className = 'fa-solid fa-chevron-down';
+        if (btnToggleGifts) btnToggleGifts.setAttribute('aria-expanded', 'false');
+        if (scrollIntoView) {
+          var giftsHeader = document.getElementById('gifts');
+          if (giftsHeader) giftsHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }
+  }
+
+  if (btnToggleGifts) {
+    btnToggleGifts.addEventListener('click', function() {
+      setGiftsExpandedState(!isGiftsListExpanded, false);
+    });
+  }
+
+  function renderGiftsGrid() {
+    var grid = document.getElementById('giftsGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    // Atualiza contadores dinâmicos no badge do botão
+    var countBadge = document.getElementById('giftsCountBadge');
+    var countText = gifts.length + (gifts.length === 1 ? ' item' : ' itens');
+    if (countBadge) countBadge.textContent = countText;
+
+    if (gifts.length === 0) {
+      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 48px 16px; background: var(--paper-card); border: 1px dashed var(--line); border-radius: var(--radius-md);"><p style="font-family: Fraunces, serif; font-style: italic; font-size: 1.2rem; color: var(--sage-dark);">Nenhum presente na lista ainda.</p></div>';
+      return;
+    }
+
+    gifts.forEach(function(item) {
+      var card = document.createElement('div');
+      card.className = 'gift-card' + (item.reserved ? ' is-reserved' : '');
+      card.id = 'gift-card-' + item.id;
+
+      var fallbackImg = 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80';
+      var photoSrc = item.imageUrl || fallbackImg;
+
+      var reservedOverlayHtml = '';
+      if (item.reserved) {
+        var reservedGuestHtml = isCoupleAuthenticated && item.reservedBy
+          ? '<p class="reserved-guest">por ' + escapeHtml(item.reservedBy) + '</p>'
+          : '';
+        reservedOverlayHtml =
+          '<div class="gift-reserved-badge">' +
+            '<p class="reserved-title">Presenteado</p>' +
+            reservedGuestHtml +
+          '</div>';
+      }
+
+      var adminToolsHtml = '';
+      if (isCoupleAuthenticated) {
+        adminToolsHtml =
+          '<div class="gift-admin-tools">' +
+            (item.reserved
+              ? '<button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.72rem;" onclick="window.weddingApp.unreserveGift(\'' + item.id + '\')">Desmarcar Reserva</button>'
+              : '') +
+            '<button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.72rem; color: var(--wine-dark);" onclick="window.weddingApp.removeGift(\'' + item.id + '\')">Excluir</button>' +
+          '</div>';
+      }
+
+      card.innerHTML =
+        '<div class="gift-card-img-wrap">' +
+          '<img class="gift-card-img" src="' + escapeHtml(photoSrc) + '" alt="' + escapeHtml(item.name) + '" loading="lazy">' +
+          '<span class="gift-category-badge">' + escapeHtml(item.category || 'Presente') + '</span>' +
+          reservedOverlayHtml +
+        '</div>' +
+        '<div class="gift-card-content">' +
+          '<h3 class="gift-card-title">' + escapeHtml(item.name) + '</h3>' +
+          '<p class="gift-card-desc">' + escapeHtml(item.desc || 'Um presente carinhoso para a nossa nova história.') + '</p>' +
+          '<div class="gift-card-footer">' +
+            '<div class="gift-price">' + formatPrice(item.price) + '</div>' +
+            (item.reserved
+              ? '<span style="font-size: 0.8rem; color: var(--sage-dark); font-style: italic;">Já escolhido</span>'
+              : '<button class="btn-presentear" onclick="window.weddingApp.openPresentearModal(\'' + item.id + '\')"><i class="fa-solid fa-hand-holding-heart" style="margin-right: 6px;"></i>Presentear com PIX</button>'
+            ) +
+          '</div>' +
+          adminToolsHtml +
+        '</div>';
+
+      grid.appendChild(card);
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  /* ==========================================================================
+     BLOCO JS 6: AUTENTICAÇÃO E CONTROLE DE ACESSO DOS NOIVOS (PIN 4 DÍGITOS)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Valida o código PIN de 4 dígitos digitado pelos noivos, gerencia o auto-foco
+     entre as caixas numéricas e controla o estado autenticado do casal.
+     ========================================================================== */
+  var modalPasscode = document.getElementById('modalPasscode');
+  var modalChangeCode = document.getElementById('modalChangeCode');
+  var modalCoupleDashboard = document.getElementById('modalCoupleDashboard');
+  var modalAddManualRsvp = document.getElementById('modalAddManualRsvp');
+  
+  var btnAdminAuth = document.getElementById('btnAdminAuth');
+  var btnAdminOpenSheet = document.getElementById('btnAdminOpenSheet');
+  var btnChangeCode = document.getElementById('btnChangeCode');
+  var btnAdminLogout = document.getElementById('btnAdminLogout');
+  var btnDashLogout = document.getElementById('btnDashLogout');
+  var adminBadge = document.getElementById('adminBadge');
+  var adminStatusMsg = document.getElementById('adminStatusMsg');
+
+  function openCouplePanelOrAuth() {
+    if (isCoupleAuthenticated) {
+      renderAdminDashboard();
+      openModal(modalCoupleDashboard);
+    } else {
+      openModal(modalPasscode);
+      document.getElementById('passcodeError').style.display = 'none';
+      digits.forEach(function(d){ d.value = ''; });
+      setTimeout(function(){ digits[0].focus(); }, 150);
+    }
+  }
+
+  if (btnAdminOpenSheet) {
+    btnAdminOpenSheet.addEventListener('click', openCouplePanelOrAuth);
+  }
+  if (btnAdminAuth) {
+    btnAdminAuth.addEventListener('click', function(){
+      openModal(modalPasscode);
+      document.getElementById('passcodeError').style.display = 'none';
+      digits.forEach(function(d){ d.value = ''; });
+      setTimeout(function(){ digits[0].focus(); }, 150);
+    });
+  }
+
+  function updateAdminUi() {
+    if (isCoupleAuthenticated) {
+      if (adminBadge) {
+        adminBadge.className = 'admin-badge active';
+        adminBadge.innerHTML = '<i class="fa-solid fa-lock-open" style="font-size: 0.75rem;"></i> Noivos Autenticados';
+      }
+      if (adminStatusMsg) {
+        adminStatusMsg.textContent = 'Planilha de respostas e cadastro de presentes liberados.';
+      }
+      if (btnAdminAuth) btnAdminAuth.style.display = 'none';
+      if (btnChangeCode) btnChangeCode.style.display = 'inline-flex';
+      if (btnAdminLogout) btnAdminLogout.style.display = 'inline-flex';
+    } else {
+      if (adminBadge) {
+        adminBadge.className = 'admin-badge';
+        adminBadge.innerHTML = '<i class="fa-solid fa-lock" style="font-size: 0.75rem;"></i> Acesso restrito';
+      }
+      if (adminStatusMsg) {
+        adminStatusMsg.textContent = 'Planilha de respostas e cadastro de presentes liberados para os noivos com código.';
+      }
+      if (btnAdminAuth) btnAdminAuth.style.display = 'inline-flex';
+      if (btnChangeCode) btnChangeCode.style.display = 'none';
+      if (btnAdminLogout) btnAdminLogout.style.display = 'none';
+    }
+    renderGiftsGrid();
+    renderAdminDashboard();
+  }
+
+  document.getElementById('closePasscodeModal').addEventListener('click', function(){
+    closeModal(modalPasscode);
+  });
+  document.getElementById('closeCoupleDashboard').addEventListener('click', function(){
+    closeModal(modalCoupleDashboard);
+  });
+  if (document.getElementById('closeManualRsvpModal')) {
+    document.getElementById('closeManualRsvpModal').addEventListener('click', function(){
+      closeModal(modalAddManualRsvp);
+    });
+  }
+
+  // Auto-focus no próximo dígito
+  var digits = [document.getElementById('code1'), document.getElementById('code2'), document.getElementById('code3'), document.getElementById('code4')];
+  digits.forEach(function(input, idx){
+    input.addEventListener('input', function(e){
+      if (this.value.length === 1 && idx < 3) {
+        digits[idx + 1].focus();
+      }
+    });
+    input.addEventListener('keydown', function(e){
+      if (e.key === 'Backspace' && !this.value && idx > 0) {
+        digits[idx - 1].focus();
+      }
+    });
+  });
+
+  document.getElementById('passcodeForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var codeTyped = digits.map(function(d){ return d.value; }).join('');
+    if (codeTyped === couplePasscode || codeTyped === DEFAULT_COUPLE_PASSCODE) {
+      isCoupleAuthenticated = true;
+      closeModal(modalPasscode);
+      updateAdminUi();
+      renderAdminDashboard();
+      openModal(modalCoupleDashboard);
+      showToast('Bem-vindos, Helena & Marcos! Painel de controle aberto.');
+    } else {
+      document.getElementById('passcodeError').style.display = 'block';
+      digits.forEach(function(d){ d.value = ''; });
+      digits[0].focus();
+    }
+  });
+
+  function performLogout() {
+    isCoupleAuthenticated = false;
+    closeModal(modalCoupleDashboard);
+    updateAdminUi();
+    showToast('Você saiu do painel dos noivos.');
+  }
+
+  if (btnAdminLogout) btnAdminLogout.addEventListener('click', performLogout);
+  if (btnDashLogout) btnDashLogout.addEventListener('click', performLogout);
+
+  /* ==========================================================================
+     ABAS DO PAINEL DOS NOIVOS
+     ========================================================================== */
+  var tabBtnRsvp = document.getElementById('tabBtnRsvp');
+  var tabBtnManageGifts = document.getElementById('tabBtnManageGifts');
+  var tabBtnSettings = document.getElementById('tabBtnSettings');
+
+  var tabPaneRsvp = document.getElementById('tabPaneRsvp');
+  var tabPaneManageGifts = document.getElementById('tabPaneManageGifts');
+  var tabPaneSettings = document.getElementById('tabPaneSettings');
+
+  function switchDashTab(activeBtn, activePane) {
+    [tabBtnRsvp, tabBtnManageGifts, tabBtnSettings].forEach(function(b){ if(b) b.classList.remove('active'); });
+    [tabPaneRsvp, tabPaneManageGifts, tabPaneSettings].forEach(function(p){ if(p) p.style.display = 'none'; });
+
+    if (activeBtn) activeBtn.classList.add('active');
+    if (activePane) activePane.style.display = 'block';
+  }
+
+  if (tabBtnRsvp) tabBtnRsvp.addEventListener('click', function(){ switchDashTab(tabBtnRsvp, tabPaneRsvp); });
+  if (tabBtnManageGifts) tabBtnManageGifts.addEventListener('click', function(){ switchDashTab(tabBtnManageGifts, tabPaneManageGifts); });
+  if (tabBtnSettings) tabBtnSettings.addEventListener('click', function(){ switchDashTab(tabBtnSettings, tabPaneSettings); });
+
+  /* ==========================================================================
+     BLOCO JS 7: PAINEL DOS NOIVOS (PLANILHA DE CONFIRMAÇÕES, BUSCA, GESTÃO & EXPORTAÇÃO CSV)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Renderiza a planilha de confirmações RSVP em tempo real, cálculo de convidados,
+     filtro de busca por nome/telefone, cadastro de novos presentes e download de CSV.
+     ========================================================================== */
+  function renderAdminDashboard() {
+    if (!isCoupleAuthenticated) return;
+
+    var filter = (document.getElementById('dashRsvpSearch') ? document.getElementById('dashRsvpSearch').value.toLowerCase().trim() : '');
+
+    // 1. Planilha RSVP
+    var rsvpTbody = document.getElementById('dashRsvpTbody');
+    if (rsvpTbody) {
+      rsvpTbody.innerHTML = '';
+      
+      var filteredRsvps = rsvps.filter(function(r){
+        if (!filter) return true;
+        return (r.name && r.name.toLowerCase().indexOf(filter) > -1) ||
+               (r.phone && r.phone.toLowerCase().indexOf(filter) > -1) ||
+               (r.note && r.note.toLowerCase().indexOf(filter) > -1);
+      });
+
+      var totalGuests = rsvps.reduce(function(sum, r){ return sum + (parseInt(r.count, 10) || 1); }, 0);
+      var totalNotes = rsvps.filter(function(r){ return r.note && r.note.trim().length > 0; }).length;
+
+      if (document.getElementById('dashTotalGuests')) document.getElementById('dashTotalGuests').textContent = totalGuests;
+      if (document.getElementById('dashTotalEntries')) document.getElementById('dashTotalEntries').textContent = rsvps.length;
+      if (document.getElementById('dashTotalNotes')) document.getElementById('dashTotalNotes').textContent = totalNotes;
+
+      if (filteredRsvps.length === 0) {
+        rsvpTbody.innerHTML = '<tr><td colspan="7" class="sheet-empty">Nenhuma resposta encontrada na planilha.</td></tr>';
+      } else {
+        filteredRsvps.forEach(function(r, idx){
+          var tr = document.createElement('tr');
+          var dateStr = '-';
+          if (r.date) {
+            try {
+              var d = new Date(r.date);
+              dateStr = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            } catch(e){}
+          }
+          
+          tr.innerHTML =
+            '<td style="text-align: center; color: var(--ink-light); font-size: 0.78rem;">' + (idx + 1) + '</td>' +
+            '<td style="font-weight: 600; color: var(--ink);">' + escapeHtml(r.name) + '</td>' +
+            '<td style="text-align: center;"><span class="badge-guest-count">' + r.count + ' ' + (r.count > 1 ? 'pessoas' : 'pessoa') + '</span></td>' +
+            '<td>' + (r.phone ? '<a href="https://wa.me/55' + r.phone.replace(/\D/g,'') + '" target="_blank" rel="noopener" style="color: var(--wine); text-decoration: underline;">' + escapeHtml(r.phone) + '</a>' : '<span style="opacity: 0.4;">-</span>') + '</td>' +
+            '<td>' + (r.note ? '<span style="font-size: 0.82rem; color: var(--wine-dark); background: rgba(107,31,43,0.06); padding: 2px 6px; border-radius: 4px;">' + escapeHtml(r.note) + '</span>' : '<span style="opacity: 0.4;">-</span>') + '</td>' +
+            '<td style="font-size: 0.78rem; color: var(--ink-light);">' + dateStr + '</td>' +
+            '<td style="text-align: center;">' +
+              '<button type="button" class="btn-cell-action delete" title="Excluir confirmação" onclick="window.weddingApp.deleteRsvp(' + idx + ')">Excluir</button>' +
+            '</td>';
+          rsvpTbody.appendChild(tr);
+        });
+      }
+    }
+
+    // 2. Tabela de Gestão de Presentes Cadastrados
+    var manageGiftsTbody = document.getElementById('dashManageGiftsTbody');
+    if (manageGiftsTbody) {
+      manageGiftsTbody.innerHTML = '';
+      if (document.getElementById('dashGiftCountInfo')) {
+        document.getElementById('dashGiftCountInfo').textContent = 'Total: ' + gifts.length + ' presentes';
+      }
+
+      if (gifts.length === 0) {
+        manageGiftsTbody.innerHTML = '<tr><td colspan="5" class="sheet-empty">Nenhum presente cadastrado na lista ainda. Preencha o formulário acima para adicionar.</td></tr>';
+      } else {
+        gifts.forEach(function(g){
+          var tr = document.createElement('tr');
+          var statusHtml = g.reserved
+            ? '<span style="color: #27ae60; font-weight: 600; font-size: 0.8rem;">Presenteado (' + escapeHtml(g.reservedBy || 'Convidado') + ')</span>' +
+              (g.reservedMsg ? '<div style="font-size: 0.74rem; font-style: italic; color: var(--wine-dark); margin-top: 3px; background: rgba(107,31,43,0.05); padding: 3px 6px; border-radius: 4px;">&ldquo;' + escapeHtml(g.reservedMsg) + '&rdquo;</div>' : '')
+            : '<span style="opacity: 0.6; font-size: 0.8rem;">Disponível na lista</span>';
+
+          tr.innerHTML =
+            '<td>' +
+              '<div style="font-weight: 600; color: var(--ink);">' + escapeHtml(g.name) + '</div>' +
+              (g.desc ? '<div style="font-size: 0.76rem; opacity: 0.7; margin-top: 2px;">' + escapeHtml(g.desc) + '</div>' : '') +
+            '</td>' +
+            '<td><span style="font-size: 0.78rem; background: var(--paper-warm); padding: 2px 6px; border-radius: 4px;">' + escapeHtml(g.category || 'Geral') + '</span></td>' +
+            '<td style="font-weight: 600; color: var(--wine);">' + formatPrice(g.price) + '</td>' +
+            '<td>' + statusHtml + '</td>' +
+            '<td style="text-align: center; white-space: nowrap;">' +
+              (g.reserved ? '<button type="button" class="btn btn-ghost" style="padding: 3px 8px; font-size: 0.72rem; margin-right: 4px;" onclick="window.weddingApp.unreserveGift(\'' + g.id + '\')">Desmarcar</button>' : '') +
+              '<button type="button" class="btn-cell-action delete" style="padding: 3px 8px; font-size: 0.72rem;" onclick="window.weddingApp.removeGift(\'' + g.id + '\')">Excluir</button>' +
+            '</td>';
+          manageGiftsTbody.appendChild(tr);
+        });
+      }
+    }
+  }
+
+  // Busca em tempo real na planilha
+  var dashRsvpSearch = document.getElementById('dashRsvpSearch');
+  if (dashRsvpSearch) {
+    dashRsvpSearch.addEventListener('input', renderAdminDashboard);
+  }
+
+  // Exportar Planilha RSVP para CSV
+  var btnExportRsvpCsv = document.getElementById('btnExportRsvpCsv');
+  if (btnExportRsvpCsv) {
+    btnExportRsvpCsv.addEventListener('click', function(){
+      if (!rsvps.length) {
+        showToast('Nenhuma resposta registrada para exportar.');
+        return;
+      }
+      var csvRows = [
+        ['#', 'Nome Convidado/Familia', 'Qtd Pessoas', 'WhatsApp/Telefone', 'Recado/Observacoes', 'Data Confirmacao']
+      ];
+      rsvps.forEach(function(r, idx){
+        var dateStr = r.date ? new Date(r.date).toLocaleString('pt-BR') : '';
+        csvRows.push([
+          idx + 1,
+          '"' + (r.name || '').replace(/"/g, '""') + '"',
+          r.count || 1,
+          '"' + (r.phone || '').replace(/"/g, '""') + '"',
+          '"' + (r.note || '').replace(/"/g, '""') + '"',
+          '"' + dateStr + '"'
+        ]);
+      });
+      var csvContent = '\uFEFF' + csvRows.map(function(e){ return e.join(';'); }).join('\n');
+      var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'Confirmacoes_Casamento_Helena_Marcos_' + new Date().toISOString().slice(0,10) + '.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Planilha CSV gerada e baixada com sucesso!');
+    });
+  }
+
+  // Adicionar Confirmação Manual
+  var btnAddManualRsvp = document.getElementById('btnAddManualRsvp');
+  if (btnAddManualRsvp) {
+    btnAddManualRsvp.addEventListener('click', function(){
+      openModal(modalAddManualRsvp);
+    });
+  }
+  var formManualRsvp = document.getElementById('formManualRsvp');
+  if (formManualRsvp) {
+    formManualRsvp.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = document.getElementById('manualName').value.trim();
+      var count = parseInt(document.getElementById('manualCount').value, 10) || 1;
+      var phone = document.getElementById('manualPhone').value.trim();
+      var note = document.getElementById('manualNote').value.trim();
+
+      if (!name) return;
+
+      rsvps.push({ name: name, count: count, phone: phone, note: note, date: new Date().toISOString() });
+      setLocal(STORAGE_KEYS.RSVP, rsvps);
+      renderRsvpList();
+      renderAdminDashboard();
+      closeModal(modalAddManualRsvp);
+      this.reset();
+      showToast('Confirmação manual adicionada à planilha com sucesso!');
+    });
+  }
+
+  // Cadastro de presente pelo Dashboard
+  var dashAddGiftForm = document.getElementById('dashAddGiftForm');
+  if (dashAddGiftForm) {
+    dashAddGiftForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = document.getElementById('dashGiftName').value.trim();
+      var price = parseFloat(document.getElementById('dashGiftPrice').value);
+      var category = document.getElementById('dashGiftCategory').value;
+      var imgUrl = document.getElementById('dashGiftImg').value.trim();
+      var desc = document.getElementById('dashGiftDesc').value.trim();
+
+      if (!name || isNaN(price) || price <= 0) {
+        showToast('Por favor, informe o nome e o preço do presente.');
+        return;
+      }
+
+      gifts.unshift({
+        id: 'g_' + Date.now(),
+        name: name,
+        price: price,
+        category: category,
+        imageUrl: imgUrl,
+        desc: desc,
+        reserved: false,
+        reservedBy: ''
+      });
+
+      saveGifts();
+      renderGiftsGrid();
+      renderAdminDashboard();
+      this.reset();
+      showToast('Presente cadastrado com sucesso na grade!');
+    });
+  }
+
+  // Alteração de código pelo Dashboard
+  var dashChangeCodeForm = document.getElementById('dashChangeCodeForm');
+  if (dashChangeCodeForm) {
+    dashChangeCodeForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var newCode = document.getElementById('dashNewPasscode').value.trim();
+      var confirmCode = document.getElementById('dashConfirmPasscode').value.trim();
+
+      if (newCode.length !== 4 || !/^\d{4}$/.test(newCode)) {
+        showToast('O código deve ter exatamente 4 dígitos numéricos.');
+        return;
+      }
+      if (newCode !== confirmCode) {
+        showToast('Os códigos digitados não coincidem.');
+        return;
+      }
+
+      couplePasscode = newCode;
+      setLocal(STORAGE_KEYS.PASSCODE, couplePasscode);
+      this.reset();
+      showToast('Código de acesso atualizado com sucesso.');
+    });
+  }
+
+  // Alteração de código pelo modal de rodapé
+  if (btnChangeCode) {
+    btnChangeCode.addEventListener('click', function(){
+      openModal(modalChangeCode);
+      document.getElementById('newPasscode').value = '';
+      document.getElementById('confirmPasscode').value = '';
+    });
+  }
+  if (document.getElementById('closeChangeCodeModal')) {
+    document.getElementById('closeChangeCodeModal').addEventListener('click', function(){
+      closeModal(modalChangeCode);
+    });
+  }
+
+  if (document.getElementById('changeCodeForm')) {
+    document.getElementById('changeCodeForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var newCode = document.getElementById('newPasscode').value.trim();
+      var confirmCode = document.getElementById('confirmPasscode').value.trim();
+
+      if (newCode.length !== 4 || !/^\d{4}$/.test(newCode)) {
+        showToast('O código deve conter exatamente 4 números.');
+        return;
+      }
+      if (newCode !== confirmCode) {
+        showToast('Os códigos digitados não coincidem.');
+        return;
+      }
+
+      couplePasscode = newCode;
+      setLocal(STORAGE_KEYS.PASSCODE, couplePasscode);
+      closeModal(modalChangeCode);
+      showToast('Novo código dos noivos atualizado com sucesso.');
+    });
+  }
+
+  var currentPresentGift = null;
+
+  // Preset fotos rápidas
+  var PHOTO_PRESETS = {
+    cozinha: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80',
+    cafeteira: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=600&q=80',
+    eletro: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?auto=format&fit=crop&w=600&q=80',
+    cama: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80',
+    luademel: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80',
+    viagem: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80'
+  };
+
+  // Funções Globais da aplicação
+  window.weddingApp = {
+    setGiftPhotoPreset: function(presetKey) {
+      var url = PHOTO_PRESETS[presetKey];
+      if (url && document.getElementById('dashGiftImg')) {
+        document.getElementById('dashGiftImg').value = url;
+        showToast('Foto sugerida aplicada!');
+      }
+    },
+
+    openPresentearModal: function(giftId) {
+      var item = gifts.find(function(g){ return g.id === giftId; });
+      if (!item) return;
+      currentPresentGift = item;
+
+      var fallbackImg = 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80';
+      var photoSrc = item.imageUrl || fallbackImg;
+
+      var content = document.getElementById('presentearModalContent');
+      content.innerHTML =
+        '<div style="text-align: center; margin-bottom: 12px;">' +
+          '<h3 style="font-size: 1.4rem; color: var(--wine-dark); margin-bottom: 4px;">Presentear os Noivos</h3>' +
+          '<p style="font-size: 0.86rem; color: var(--ink-light);">Helena Sales &amp; Marcos Amaral</p>' +
+        '</div>' +
+        
+        '<div class="pix-gift-preview">' +
+          '<img src="' + escapeHtml(photoSrc) + '" class="pix-gift-thumb" alt="' + escapeHtml(item.name) + '">' +
+          '<div class="pix-gift-info">' +
+            '<span class="p-cat">' + escapeHtml(item.category || 'Presente de Casamento') + '</span>' +
+            '<h4 class="p-name">' + escapeHtml(item.name) + '</h4>' +
+            '<div class="p-price">' + formatPrice(item.price) + '</div>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="pix-box">' +
+          '<p style="font-size: 0.84rem; font-weight: 600; color: var(--wine-dark); margin: 0 0 2px;">Chave PIX Oficial do Casal</p>' +
+          '<p style="font-size: 0.78rem; color: var(--ink-light); margin: 0 0 10px;">' + PIX_RECEIVER + '</p>' +
+          '<div class="pix-key-wrap">' +
+            '<span class="pix-key-text" id="modalPixKeyText">' + PIX_KEY + '</span>' +
+            '<button type="button" class="btn btn-solid" style="padding: 5px 12px; font-size: 0.76rem;" onclick="window.weddingApp.copyPix()">' +
+              '<i class="fa-regular fa-copy" style="margin-right: 5px;"></i>Copiar Chave PIX' +
+            '</button>' +
+          '</div>' +
+          '<div class="pix-instructions">' +
+            '<span><strong class="step-num">1.</strong> Copie a chave PIX acima e abra o aplicativo do seu banco.</span>' +
+            '<span><strong class="step-num">2.</strong> Realize a transferência no valor indicado de ' + formatPrice(item.price) + '.</span>' +
+            '<span><strong class="step-num">3.</strong> Preencha seu nome abaixo para avisar os noivos.</span>' +
+          '</div>' +
+        '</div>' +
+
+        '<form id="confirmGiftForm" onsubmit="window.weddingApp.handleConfirmGift(event)">' +
+          '<div class="field">' +
+            '<label for="guestGiftName">Seu Nome Completo *</label>' +
+            '<input type="text" id="guestGiftName" placeholder="Ex: Maria &amp; Carlos Silva" required>' +
+          '</div>' +
+          '<div class="field">' +
+            '<label for="guestGiftMsg">Mensagem com Carinho aos Noivos *</label>' +
+            '<textarea id="guestGiftMsg" rows="2" placeholder="Ex: Que este presente traga momentos muito felizes na nova casa de vocês!" required></textarea>' +
+          '</div>' +
+          '<button type="submit" class="btn btn-solid" style="width: 100%; padding: 12px; font-size: 0.94rem;">' +
+            '<i class="fa-solid fa-heart" style="margin-right: 6px;"></i>Confirmar Presente' +
+          '</button>' +
+        '</form>';
+
+      openModal(modalPresentear);
+    },
+
+    copyPix: function() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(PIX_KEY).then(function(){
+          showToast('Chave PIX copiada com sucesso!');
+        }).catch(function(){
+          showToast('Chave PIX: ' + PIX_KEY);
+        });
+      } else {
+        showToast('Chave PIX: ' + PIX_KEY);
+      }
+    },
+
+    handleConfirmGift: function(e) {
+      e.preventDefault();
+      if (!currentPresentGift) return;
+
+      var guestName = document.getElementById('guestGiftName').value.trim();
+      var guestMsg = document.getElementById('guestGiftMsg').value.trim();
+
+      if (!guestName) {
+        showToast('Por favor, informe seu nome completo.');
+        return;
+      }
+      if (!guestMsg) {
+        showToast('Por favor, escreva uma mensagem com carinho para os noivos.');
+        return;
+      }
+
+      currentPresentGift.reserved = true;
+      currentPresentGift.reservedBy = guestName;
+      currentPresentGift.reservedMsg = guestMsg;
+      saveGifts();
+      renderGiftsGrid();
+      renderAdminDashboard();
+      closeModal(modalPresentear);
+      showToast('Obrigado, ' + guestName + '! Sua mensagem e presente foram registrados.');
+    },
+
+    removeGift: function(giftId) {
+      if (!confirm('Deseja realmente excluir este presente da lista?')) return;
+      gifts = gifts.filter(function(g){ return g.id !== giftId; });
+      saveGifts();
+      renderGiftsGrid();
+      renderAdminDashboard();
+      showToast('Presente excluído com sucesso.');
+    },
+
+    unreserveGift: function(giftId) {
+      var item = gifts.find(function(g){ return g.id === giftId; });
+      if (item) {
+        item.reserved = false;
+        item.reservedBy = '';
+        saveGifts();
+        renderGiftsGrid();
+        renderAdminDashboard();
+        showToast('Reserva do presente cancelada.');
+      }
+    },
+
+    deleteRsvp: function(index) {
+      if (!confirm('Deseja realmente remover esta resposta da planilha?')) return;
+      rsvps.splice(index, 1);
+      setLocal(STORAGE_KEYS.RSVP, rsvps);
+      renderRsvpList();
+      renderAdminDashboard();
+      showToast('Resposta removida da planilha.');
+    }
+  };
+
+  document.getElementById('closePresentearModal').addEventListener('click', function(){
+    closeModal(modalPresentear);
+  });
+
+  /* ==========================================================================
+     BLOCO JS 8: GALERIA DE FOTOS DO PRÉ-WEDDING (FOTOS, TAGS E LIGHTBOX)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Renderiza as fotos do ensaio na faixa horizontal e abre a foto em tela cheia ao clicar.
+     
+     O QUE VOCÊ PODE PERSONALIZAR AQUI:
+     • Substitua as URLs das fotos, tags e legendas no array `photos`.
+     ========================================================================== */
+  var photos = [
+    { tag: 'Ensaio na serra', caption: 'Pôr do sol dourado onde tudo começou.', img: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80' },
+    { tag: 'Domingo no parque', caption: 'Piquenique improvisado e muitas risadas.', img: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80' },
+    { tag: 'O pedido', caption: 'O céu que testemunhou o nosso sim inesquecível.', img: 'https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&w=800&q=80' },
+    { tag: 'Olhares cúmplices', caption: 'O amor que se renova a cada amanhecer.', img: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=800&q=80' },
+    { tag: 'Pés na areia', caption: 'Viagem especial guardada na memória.', img: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=800&q=80' },
+    { tag: 'Rumo ao altar', caption: 'Contando os dias para o nosso 14 de março.', img: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=800&q=80' }
+  ];
+
+  var galleryStrip = document.getElementById('galleryStrip');
+  var lightboxPhoto = document.getElementById('lightboxPhoto');
+  var photoLargeImg = document.getElementById('photoLargeImg');
+  var photoLargeCaption = document.getElementById('photoLargeCaption');
+
+  photos.forEach(function(p){
+    var btn = document.createElement('button');
+    btn.className = 'g-photo';
+    btn.innerHTML =
+      '<div class="g-photo-img" style="background-image: url(\'' + p.img + '\');">' +
+        '<span class="g-photo-tag">' + escapeHtml(p.tag) + '</span>' +
+      '</div>' +
+      '<p class="g-caption">' + escapeHtml(p.caption) + '</p>';
+
+    btn.addEventListener('click', function(){
+      photoLargeImg.style.backgroundImage = 'url(\'' + p.img + '\')';
+      photoLargeCaption.textContent = p.caption;
+      openModal(lightboxPhoto);
+    });
+    galleryStrip.appendChild(btn);
+  });
+
+  document.getElementById('closePhoto').addEventListener('click', function(){
+    closeModal(lightboxPhoto);
+  });
+
+  /* ==========================================================================
+     BLOCO JS 9: EFEITOS DE ROLAGEM NA LINHA DO TEMPO (INTERSECTION OBSERVER)
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Observa a rolagem da página e aplica efeito suave de fade-in/slide nos marcos
+     da linha do tempo conforme vão aparecendo na tela.
+     ========================================================================== */
+  var tItems = document.querySelectorAll('.t-item');
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.25 });
+    tItems.forEach(function(el){ observer.observe(el); });
+  } else {
+    tItems.forEach(function(el){ el.classList.add('visible'); });
+  }
+
+  /* ==========================================================================
+     BLOCO JS 10: CONFIRMAÇÃO DE PRESENÇA (RSVP) & UTILITÁRIOS GLOBAIS
+     --------------------------------------------------------------------------
+     O QUE ESTE BLOCO FAZ:
+     Processa o envio do formulário de RSVP dos convidados, salva os dados com
+     privacidade (visíveis apenas no Painel dos Noivos) e inicializa a aplicação.
+     ========================================================================== */
+  var rsvps = getLocal(STORAGE_KEYS.RSVP, []);
+
+  function renderRsvpList() {
+    var summary = document.getElementById('rsvpSummary');
+    if (!summary) return;
+    // Lista de confirmações mantida privada; visível exclusivamente para os noivos no dashboard autenticado
+    summary.innerHTML = '';
+  }
+
+  document.getElementById('rsvpForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = document.getElementById('familyName').value.trim();
+    var count = parseInt(document.getElementById('peopleCount').value, 10) || 1;
+    var phone = document.getElementById('rsvpPhone').value.trim();
+    var note = document.getElementById('rsvpNote').value.trim();
+
+    if (!name) return;
+
+    var entry = { name: name, count: count, phone: phone, note: note, date: new Date().toISOString() };
+    rsvps.push(entry);
+    setLocal(STORAGE_KEYS.RSVP, rsvps);
+    renderRsvpList();
+
+    var confirmBox = document.getElementById('rsvpConfirm');
+    confirmBox.textContent = 'Presença confirmada com sucesso para ' + name + ' (' + count + ' pessoa' + (count > 1 ? 's' : '') + '). Mal podemos esperar para comemorar com você!';
+    confirmBox.classList.add('show');
+    this.reset();
+    document.getElementById('peopleCount').value = 1;
+    showToast('Presença confirmada! Obrigado.');
+  });
+
+  // Inicialização
+  renderGiftsGrid();
+  renderRsvpList();
+  updateAdminUi();
+
+})();
+</script>
+</body>
+</html>

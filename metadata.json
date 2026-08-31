@@ -1,0 +1,7 @@
+{
+  "name": "Helena & Marcos — Convite & Lista de Casamento",
+  "description": "Convite de casamento interativo com envelope animado, revelação suave de convite, confirmação RSVP e lista de presentes em grade com código de acesso exclusivo do casal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
